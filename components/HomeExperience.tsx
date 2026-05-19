@@ -11,6 +11,7 @@ import {
   useTerminalSequenceItem,
 } from "@/components/magicui/terminal";
 import { Desktop } from "@/components/os/Desktop";
+import { cn } from "@/lib/utils";
 
 interface HomeExperienceProps {
   initialApp?: "blog";
@@ -121,12 +122,12 @@ export function HomeExperience({
       )}
       {/* Hero section (title + CTA) */}
       <div
-        className={
-          "flex flex-col items-center gap-4 transition-all duration-500 ease-out " +
-          (launched
+        className={cn(
+          "flex flex-col items-center gap-4 transition-all duration-500 ease-out",
+          launched
             ? "opacity-0 -translate-y-2 scale-[0.98] pointer-events-none"
-            : "opacity-100 translate-y-0 scale-100")
-        }
+            : "opacity-100 translate-y-0 scale-100",
+        )}
         aria-hidden={launched}
       >
         <TypingHyperText
@@ -139,18 +140,18 @@ export function HomeExperience({
         </TypingHyperText>
         {/* Smooth reserved space + fade/slide in for the button */}
         <div
-          className={
-            (showCta ? "h-12 mt-1" : "h-0 mt-0 ") +
-            " w-full overflow-hidden transition-[height,margin] duration-300 ease-out"
-          }
+          className={cn(
+            "w-full overflow-hidden transition-[height,margin] duration-300 ease-out",
+            showCta ? "h-12 mt-1" : "h-0 mt-0",
+          )}
         >
           <div
-            className={
-              "flex w-full justify-center transition-all duration-300 ease-out " +
-              (showCta
+            className={cn(
+              "flex w-full justify-center transition-all duration-300 ease-out",
+              showCta
                 ? "opacity-100 translate-y-0 pointer-events-auto"
-                : "opacity-0 translate-y-2 pointer-events-none")
-            }
+                : "opacity-0 translate-y-2 pointer-events-none",
+            )}
           >
             <InteractiveHoverButton onClick={() => setLaunched(true)}>
               Continue
@@ -161,14 +162,14 @@ export function HomeExperience({
 
       <button
         type="button"
-        className={
-          "fixed inset-x-0 bottom-5 z-20 mx-auto w-fit rounded-md px-3 py-2 " +
-          "font-mono text-xs text-muted-foreground underline-offset-4 " +
-          "transition-colors hover:text-foreground hover:underline " +
-          (showCta && !launched
+        className={cn(
+          "fixed inset-x-0 bottom-5 z-20 mx-auto w-fit rounded-md px-3 py-2",
+          "font-mono text-xs text-muted-foreground underline-offset-4",
+          "transition-colors hover:text-foreground hover:underline",
+          showCta && !launched
             ? "opacity-100 pointer-events-auto"
-            : "opacity-0 pointer-events-none")
-        }
+            : "opacity-0 pointer-events-none",
+        )}
         onClick={() => launchDesktop("blog")}
       >
         Skip to blog
