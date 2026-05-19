@@ -103,11 +103,13 @@ export function AppWindow({
     startMotionY: number;
     handle: ResizeHandle;
   }>(null);
+  const resizeCleanupRef = useRef<null | (() => void)>(null);
 
   const startResize = (handle: ResizeHandle, e: React.PointerEvent) => {
     if (maximized || isMobile) return;
     e.preventDefault();
     e.stopPropagation();
+    resizeCleanupRef.current?.();
     resizingRef.current = {
       startX: e.clientX,
       startY: e.clientY,
@@ -143,12 +145,23 @@ export function AppWindow({
     };
     const onUp = () => {
       resizingRef.current = null;
-      window.removeEventListener("pointermove", onMove);
-      window.removeEventListener("pointerup", onUp);
+      resizeCleanupRef.current?.();
+      resizeCleanupRef.current = null;
     };
     window.addEventListener("pointermove", onMove);
     window.addEventListener("pointerup", onUp, { once: true });
+    resizeCleanupRef.current = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+    };
   };
+
+  useEffect(() => {
+    return () => {
+      resizeCleanupRef.current?.();
+      resizeCleanupRef.current = null;
+    };
+  }, []);
 
   useEffect(() => {
     if (!isMobile) return;

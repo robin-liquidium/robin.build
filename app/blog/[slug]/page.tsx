@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { BlogPostContent } from "@/components/blog/BlogPostContent";
 import { HomeExperience } from "@/components/HomeExperience";
 import { getBlogPostBySlug, getBlogPosts, getBlogPostUrl } from "@/lib/blog";
-import { SITE_NAME } from "@/lib/site";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 interface BlogPostPageProps {
   params: Promise<{
@@ -63,7 +64,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     author: {
       "@type": "Person",
       name: "Robin",
-      url: "https://robin.build",
+      url: SITE_URL,
     },
     mainEntityOfPage: getBlogPostUrl(post.slug),
     keywords: post.tags.join(", "),
@@ -71,6 +72,18 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
 
   return (
     <>
+      <article className="sr-only">
+        <header>
+          <p>
+            <time dateTime={post.publishedAt}>{post.publishedAt}</time>
+            {" / "}
+            {post.readingTime}
+          </p>
+          <h1>{post.title}</h1>
+          <p>{post.description}</p>
+        </header>
+        <BlogPostContent post={post} />
+      </article>
       <HomeExperience initialApp="blog" initialBlogSlug={post.slug} />
       <script
         type="application/ld+json"

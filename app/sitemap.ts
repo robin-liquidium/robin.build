@@ -3,16 +3,21 @@ import { getBlogPosts, getBlogPostUrl } from "@/lib/blog";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
+  const latestBlogUpdate = getBlogPosts()[0]?.updatedAt;
+  const staticLastModified = latestBlogUpdate
+    ? new Date(latestBlogUpdate)
+    : new Date();
+
   const staticRoutes: MetadataRoute.Sitemap = [
     {
       url: SITE_URL,
-      lastModified: new Date("2026-05-19"),
+      lastModified: staticLastModified,
       changeFrequency: "monthly",
       priority: 1,
     },
     {
       url: `${SITE_URL}/blog`,
-      lastModified: new Date("2026-05-19"),
+      lastModified: staticLastModified,
       changeFrequency: "weekly",
       priority: 0.8,
     },

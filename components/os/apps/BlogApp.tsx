@@ -19,6 +19,7 @@ export default function BlogApp({ className, initialSlug }: BlogAppProps) {
   const pathname = usePathname();
   const router = useRouter();
   const copiedTimerRef = useRef<number | null>(null);
+  const startedOnBlogRouteRef = useRef(pathname.startsWith("/blog"));
   const posts = useMemo(() => getBlogPosts(), []);
   const firstPostSlug = posts[0]?.slug ?? "";
   const validInitialSlug = posts.some((post) => post.slug === initialSlug)
@@ -30,6 +31,15 @@ export default function BlogApp({ className, initialSlug }: BlogAppProps) {
     posts.find((post) => post.slug === selectedSlug) ?? posts[0];
 
   useEffect(() => {
+    if (!startedOnBlogRouteRef.current) {
+      if (!selectedPost) return;
+      const postPath = `/blog/${selectedPost.slug}`;
+      if (window.location.pathname !== postPath) {
+        window.history.pushState({}, "", postPath);
+      }
+      return;
+    }
+
     const maybeSlug = pathname.match(/^\/blog\/([^/]+)$/)?.[1];
     if (maybeSlug && posts.some((post) => post.slug === maybeSlug)) {
       setSelectedSlug(maybeSlug);
@@ -48,7 +58,11 @@ export default function BlogApp({ className, initialSlug }: BlogAppProps) {
       }
       setCopied(false);
       setSelectedSlug(slug);
-      router.push(`/blog/${slug}`);
+      if (startedOnBlogRouteRef.current) {
+        router.push(`/blog/${slug}`);
+        return;
+      }
+      window.history.pushState({}, "", `/blog/${slug}`);
     },
     [router],
   );
