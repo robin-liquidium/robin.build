@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound, permanentRedirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { getBlogPosts } from "@/lib/blog";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
@@ -22,5 +22,5 @@ export default function BlogIndexPage() {
   const firstPost = getBlogPosts()[0];
   if (!firstPost) notFound();
 
-  permanentRedirect(`/blog/${firstPost.slug}`);
+  redirect(`/blog/${firstPost.slug}`);
 }

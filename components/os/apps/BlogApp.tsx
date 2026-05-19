@@ -20,6 +20,7 @@ export default function BlogApp({ className, initialSlug }: BlogAppProps) {
   const router = useRouter();
   const copiedTimerRef = useRef<number | null>(null);
   const startedOnBlogRouteRef = useRef(pathname.startsWith("/blog"));
+  const nativeHistoryInitializedRef = useRef(false);
   const posts = useMemo(() => getBlogPosts(), []);
   const firstPostSlug = posts[0]?.slug ?? "";
   const validInitialSlug = posts.some((post) => post.slug === initialSlug)
@@ -35,7 +36,12 @@ export default function BlogApp({ className, initialSlug }: BlogAppProps) {
       if (!selectedPost) return;
       const postPath = `/blog/${selectedPost.slug}`;
       if (window.location.pathname !== postPath) {
-        window.history.pushState({}, "", postPath);
+        if (nativeHistoryInitializedRef.current) {
+          window.history.pushState({}, "", postPath);
+        } else {
+          window.history.replaceState({}, "", postPath);
+          nativeHistoryInitializedRef.current = true;
+        }
       }
       return;
     }
@@ -66,6 +72,21 @@ export default function BlogApp({ className, initialSlug }: BlogAppProps) {
     },
     [router],
   );
+
+  useEffect(() => {
+    if (startedOnBlogRouteRef.current) return;
+
+    const syncNativeHistorySlug = () => {
+      const maybeSlug =
+        window.location.pathname.match(/^\/blog\/([^/]+)$/)?.[1];
+      if (!maybeSlug) return;
+      if (!posts.some((post) => post.slug === maybeSlug)) return;
+      setSelectedSlug(maybeSlug);
+    };
+
+    window.addEventListener("popstate", syncNativeHistorySlug);
+    return () => window.removeEventListener("popstate", syncNativeHistorySlug);
+  }, [posts]);
 
   const copySelectedPostUrl = useCallback(async () => {
     if (!selectedPost) return;
