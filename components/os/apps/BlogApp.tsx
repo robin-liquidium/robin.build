@@ -2,7 +2,7 @@
 
 import { Check, Copy, Rss } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BlogPostContent } from "@/components/blog/BlogPostContent";
 import { Button } from "@/components/ui/button";
 import { getBlogPosts } from "@/lib/blog";
@@ -18,6 +18,7 @@ const COPIED_STATE_DURATION_MS = 1600;
 export default function BlogApp({ className, initialSlug }: BlogAppProps) {
   const pathname = usePathname();
   const router = useRouter();
+  const copiedTimerRef = useRef<number | null>(null);
   const posts = useMemo(() => getBlogPosts(), []);
   const firstPostSlug = posts[0]?.slug ?? "";
   const validInitialSlug = posts.some((post) => post.slug === initialSlug)
@@ -41,6 +42,10 @@ export default function BlogApp({ className, initialSlug }: BlogAppProps) {
 
   const selectPost = useCallback(
     (slug: string) => {
+      if (copiedTimerRef.current !== null) {
+        window.clearTimeout(copiedTimerRef.current);
+        copiedTimerRef.current = null;
+      }
       setCopied(false);
       setSelectedSlug(slug);
       router.push(`/blog/${slug}`);
@@ -69,8 +74,22 @@ export default function BlogApp({ className, initialSlug }: BlogAppProps) {
     }
 
     setCopied(true);
-    window.setTimeout(() => setCopied(false), COPIED_STATE_DURATION_MS);
+    if (copiedTimerRef.current !== null) {
+      window.clearTimeout(copiedTimerRef.current);
+    }
+    copiedTimerRef.current = window.setTimeout(() => {
+      setCopied(false);
+      copiedTimerRef.current = null;
+    }, COPIED_STATE_DURATION_MS);
   }, [selectedPost]);
+
+  useEffect(() => {
+    return () => {
+      if (copiedTimerRef.current !== null) {
+        window.clearTimeout(copiedTimerRef.current);
+      }
+    };
+  }, []);
 
   if (!selectedPost) {
     return (

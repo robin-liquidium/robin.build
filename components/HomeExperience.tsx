@@ -54,16 +54,18 @@ export function HomeExperience({
     const html = document.documentElement;
     const { style: htmlStyle } = html;
     const { style: bodyStyle } = document.body;
+    const previousHtmlOverflow = htmlStyle.overflow;
+    const previousBodyOverflow = bodyStyle.overflow;
     if (desktopActive) {
       htmlStyle.overflow = "hidden";
       bodyStyle.overflow = "hidden";
     } else {
-      htmlStyle.overflow = "";
-      bodyStyle.overflow = "";
+      htmlStyle.overflow = previousHtmlOverflow;
+      bodyStyle.overflow = previousBodyOverflow;
     }
     return () => {
-      htmlStyle.overflow = "";
-      bodyStyle.overflow = "";
+      htmlStyle.overflow = previousHtmlOverflow;
+      bodyStyle.overflow = previousBodyOverflow;
     };
   }, [launched, bootComplete]);
 
