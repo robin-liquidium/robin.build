@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  BookOpenText,
   Calculator,
   Compass,
   FileText,
@@ -19,6 +20,7 @@ import {
 } from "react";
 import { MorphingText } from "@/components/magicui/morphing-text";
 import { AppWindow } from "@/components/os/AppWindow";
+import BlogApp from "@/components/os/apps/BlogApp";
 import BrowserApp from "@/components/os/apps/BrowserApp";
 import CalculatorApp from "@/components/os/apps/CalculatorApp";
 import { FilesApp } from "@/components/os/apps/FilesApp";
@@ -38,6 +40,8 @@ import { cn } from "@/lib/utils";
 
 interface DesktopProps {
   className?: string;
+  initialApp?: "blog";
+  initialBlogSlug?: string;
   name?: string;
 }
 
@@ -81,7 +85,12 @@ function DesktopShortcutButton({
   );
 }
 
-export function Desktop({ className, name }: DesktopProps) {
+export function Desktop({
+  className,
+  initialApp,
+  initialBlogSlug,
+  name,
+}: DesktopProps) {
   const [filesOpen, setFilesOpen] = useState(false);
   const openFiles = useCallback(() => setFilesOpen(true), []);
   const closeFiles = useCallback(() => setFilesOpen(false), []);
@@ -91,6 +100,9 @@ export function Desktop({ className, name }: DesktopProps) {
   const [notesOpen, setNotesOpen] = useState(false);
   const openNotes = useCallback(() => setNotesOpen(true), []);
   const closeNotes = useCallback(() => setNotesOpen(false), []);
+  const [blogOpen, setBlogOpen] = useState(initialApp === "blog");
+  const openBlog = useCallback(() => setBlogOpen(true), []);
+  const closeBlog = useCallback(() => setBlogOpen(false), []);
   const [snakeOpen, setSnakeOpen] = useState(false);
   const openSnake = useCallback(() => setSnakeOpen(true), []);
   const closeSnake = useCallback(() => setSnakeOpen(false), []);
@@ -202,6 +214,9 @@ export function Desktop({ className, name }: DesktopProps) {
     if (notesOpen) bringToFront("notes");
   }, [notesOpen, bringToFront]);
   useEffect(() => {
+    if (blogOpen) bringToFront("blog");
+  }, [blogOpen, bringToFront]);
+  useEffect(() => {
     if (snakeOpen) bringToFront("snake");
   }, [snakeOpen, bringToFront]);
 
@@ -251,6 +266,16 @@ export function Desktop({ className, name }: DesktopProps) {
             bringToFront("text");
           }}
           icon={<FileText className="h-6 w-6" />}
+        />
+
+        <DesktopShortcutButton
+          label="Blog"
+          ariaLabel="Open Blog"
+          onClick={() => {
+            openBlog();
+            bringToFront("blog");
+          }}
+          icon={<BookOpenText className="h-6 w-6" />}
         />
 
         {PROJECT_WEB_SHORTCUTS.map((shortcut) => (
@@ -310,6 +335,14 @@ export function Desktop({ className, name }: DesktopProps) {
                 },
               },
               {
+                icon: BookOpenText,
+                label: "Blog",
+                onClick: () => {
+                  openBlog();
+                  bringToFront("blog");
+                },
+              },
+              {
                 icon: isDark ? SunDim : Moon,
                 label: "Theme",
                 onClick: toggleTheme,
@@ -348,6 +381,9 @@ export function Desktop({ className, name }: DesktopProps) {
                   } else if (appId === "notes") {
                     openNotes();
                     bringToFront("notes");
+                  } else if (appId === "blog") {
+                    openBlog();
+                    bringToFront("blog");
                   } else if (appId === "snake") {
                     openSnake();
                     bringToFront("snake");
@@ -433,6 +469,31 @@ export function Desktop({ className, name }: DesktopProps) {
               initialHeight={560}
             >
               <NotesApp />
+            </AppWindow>
+          </div>
+        </div>
+      )}
+
+      {blogOpen && (
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ zIndex: zMap.blog ?? 20 }}
+        >
+          <div
+            className="pointer-events-auto"
+            onPointerDown={() => bringToFront("blog")}
+          >
+            <AppWindow
+              title="Blog"
+              onClose={closeBlog}
+              onMinimize={closeBlog}
+              dragConstraints={desktopRef}
+              initialWidth={960}
+              initialHeight={660}
+              minWidth={360}
+              minHeight={420}
+            >
+              <BlogApp initialSlug={initialBlogSlug} />
             </AppWindow>
           </div>
         </div>

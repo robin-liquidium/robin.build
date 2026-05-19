@@ -72,6 +72,7 @@ Welcome. This is your mini web OS workspace.
 
 Quick Start
 - Click desktop icons to open apps, links, and files.
+- Open Blog for educational notes with shareable URLs.
 - Drag windows from the top bar.
 - Use yellow to minimize and red to close a window.
 - Click the green window control to maximize that window.
@@ -88,4 +89,8 @@ Pinned Project Shortcuts
 - liquidium.fi
 - liquidium.wtf
 - liquidium.org
+
+Blog
+- /blog/fix-codex-cli-colors-ssh-ghostty
+- /blog
 `;
