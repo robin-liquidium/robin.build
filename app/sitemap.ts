@@ -3,10 +3,12 @@ import { getBlogPosts, getBlogPostUrl } from "@/lib/blog";
 import { SITE_URL } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const latestBlogUpdate = getBlogPosts()[0]?.updatedAt;
-  const staticLastModified = latestBlogUpdate
-    ? new Date(latestBlogUpdate)
-    : new Date();
+  const posts = getBlogPosts();
+  const latestBlogUpdate = posts.reduce<Date | null>((latest, post) => {
+    const updated = new Date(post.updatedAt);
+    return !latest || updated > latest ? updated : latest;
+  }, null);
+  const staticLastModified = latestBlogUpdate ?? new Date();
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
@@ -23,7 +25,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ];
 
-  const blogRoutes: MetadataRoute.Sitemap = getBlogPosts().map((post) => ({
+  const blogRoutes: MetadataRoute.Sitemap = posts.map((post) => ({
     url: getBlogPostUrl(post.slug),
     lastModified: new Date(post.updatedAt),
     changeFrequency: "monthly",
