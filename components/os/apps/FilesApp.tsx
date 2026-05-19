@@ -2,6 +2,7 @@
 
 import {
   AppWindow,
+  BookOpenText,
   Calculator as CalculatorIcon,
   Clock,
   Compass,
@@ -31,7 +32,7 @@ interface FilesAppProps {
   onOpenImage?: (payload: { fileName: string; src: string }) => void;
   onOpenLink?: (payload: { href: string }) => void;
   onOpenApp?: (payload: {
-    appId: "browser" | "calculator" | "notes" | "files" | "snake";
+    appId: "blog" | "browser" | "calculator" | "notes" | "files" | "snake";
   }) => void;
 }
 
@@ -89,7 +90,7 @@ type FileEntry = {
   content?: string;
   href?: string;
   src?: string;
-  appId?: "browser" | "calculator" | "notes" | "files" | "snake";
+  appId?: "blog" | "browser" | "calculator" | "notes" | "files" | "snake";
 };
 
 const VFS_DATE = {
@@ -135,6 +136,13 @@ const makeVfsRoot = (isDarkTheme: boolean): Record<string, FileEntry> => {
         icon: <AppWindow className="h-4 w-4" />,
         modified: VFS_DATE.MID,
         appId: "files",
+      },
+      {
+        name: "Blog",
+        type: "app",
+        icon: <BookOpenText className="h-4 w-4" />,
+        modified: VFS_DATE.RECENT,
+        appId: "blog",
       },
       {
         name: DESKTOP_README_FILE_NAME,
@@ -291,6 +299,13 @@ const makeVfsRoot = (isDarkTheme: boolean): Record<string, FileEntry> => {
           icon: <StickyNote className="h-4 w-4" />,
           modified: VFS_DATE.MID,
           appId: "notes",
+        },
+        {
+          name: "Blog",
+          type: "app",
+          icon: <BookOpenText className="h-4 w-4" />,
+          modified: VFS_DATE.RECENT,
+          appId: "blog",
         },
         {
           name: "Snake",

@@ -29,6 +29,29 @@ const MOBILE_WINDOW_RESERVED_HEIGHT_PX = 132;
 const MOBILE_WINDOW_TOP_PX = 48;
 const DESKTOP_DRAG_THRESHOLD_PX = 2;
 const MOBILE_DRAG_THRESHOLD_PX = 8;
+type ResizeHandle = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+
+const RESIZE_HANDLES = [
+  {
+    handle: "top-left",
+    className: "left-0 top-0 cursor-nwse-resize",
+  },
+  {
+    handle: "top-right",
+    className: "right-0 top-0 cursor-nesw-resize",
+  },
+  {
+    handle: "bottom-left",
+    className: "bottom-0 left-0 cursor-nesw-resize",
+  },
+  {
+    handle: "bottom-right",
+    className: "bottom-0 right-0 cursor-nwse-resize",
+  },
+] satisfies Array<{
+  handle: ResizeHandle;
+  className: string;
+}>;
 
 /** Tracks whether the viewport matches the mobile breakpoint. */
 function useIsMobileViewport(): boolean {
@@ -76,21 +99,23 @@ export function AppWindow({
     startY: number;
     startW: number;
     startH: number;
-    edge: "right" | "bottom" | "corner";
+    startMotionX: number;
+    startMotionY: number;
+    handle: ResizeHandle;
   }>(null);
 
-  const startResize = (
-    edge: "right" | "bottom" | "corner",
-    e: React.PointerEvent,
-  ) => {
+  const startResize = (handle: ResizeHandle, e: React.PointerEvent) => {
     if (maximized || isMobile) return;
     e.preventDefault();
+    e.stopPropagation();
     resizingRef.current = {
       startX: e.clientX,
       startY: e.clientY,
       startW: size.width,
       startH: size.height,
-      edge,
+      startMotionX: x.get(),
+      startMotionY: y.get(),
+      handle,
     };
 
     const onMove = (ev: PointerEvent) => {
@@ -98,13 +123,23 @@ export function AppWindow({
       if (!r) return;
       const dx = ev.clientX - r.startX;
       const dy = ev.clientY - r.startY;
-      let w = r.startW;
-      let h = r.startH;
-      if (r.edge === "right" || r.edge === "corner")
-        w = Math.max(minWidth, r.startW + dx);
-      if (r.edge === "bottom" || r.edge === "corner")
-        h = Math.max(minHeight, r.startH + dy);
-      setSize({ width: w, height: h });
+      const resizesLeft = r.handle.endsWith("left");
+      const resizesTop = r.handle.startsWith("top");
+      const nextWidth = Math.max(minWidth, r.startW + (resizesLeft ? -dx : dx));
+      const nextHeight = Math.max(
+        minHeight,
+        r.startH + (resizesTop ? -dy : dy),
+      );
+
+      const widthDelta = nextWidth - r.startW;
+      const heightDelta = nextHeight - r.startH;
+
+      x.set(r.startMotionX + (resizesLeft ? -widthDelta / 2 : widthDelta / 2));
+      if (resizesTop) {
+        y.set(r.startMotionY - heightDelta);
+      }
+
+      setSize({ width: nextWidth, height: nextHeight });
     };
     const onUp = () => {
       resizingRef.current = null;
@@ -271,22 +306,19 @@ export function AppWindow({
       </div>
 
       {/* Resize handles (disabled when maximized or not resizable) */}
-      {!maximized && resizable && !isMobile && (
-        <>
+      {!maximized &&
+        resizable &&
+        !isMobile &&
+        RESIZE_HANDLES.map((handle) => (
           <div
-            className="absolute right-0 top-10 bottom-0 w-2 cursor-ew-resize touch-none select-none"
-            onPointerDown={(e) => startResize("right", e)}
+            className={cn(
+              "absolute z-10 h-4 w-4 touch-none select-none",
+              handle.className,
+            )}
+            key={handle.handle}
+            onPointerDown={(e) => startResize(handle.handle, e)}
           />
-          <div
-            className="absolute left-0 right-0 bottom-0 h-2 cursor-ns-resize touch-none select-none"
-            onPointerDown={(e) => startResize("bottom", e)}
-          />
-          <div
-            className="absolute bottom-0 right-0 h-3 w-3 cursor-nwse-resize touch-none select-none"
-            onPointerDown={(e) => startResize("corner", e)}
-          />
-        </>
-      )}
+        ))}
     </motion.div>
   );
 }
