@@ -10,9 +10,10 @@ import {
   StickyNote,
   SunDim,
 } from "lucide-react";
-import Image from "next/image";
 import {
+  lazy,
   type ReactNode,
+  Suspense,
   useCallback,
   useEffect,
   useRef,
@@ -20,14 +21,6 @@ import {
 } from "react";
 import { MorphingText } from "@/components/magicui/morphing-text";
 import { AppWindow } from "@/components/os/AppWindow";
-import BlogApp from "@/components/os/apps/BlogApp";
-import BrowserApp from "@/components/os/apps/BrowserApp";
-import CalculatorApp from "@/components/os/apps/CalculatorApp";
-import { FilesApp } from "@/components/os/apps/FilesApp";
-import ImageViewerApp from "@/components/os/apps/ImageViewerApp";
-import NotesApp from "@/components/os/apps/NotesApp";
-import SnakeApp from "@/components/os/apps/SnakeApp";
-import TextReaderApp from "@/components/os/apps/TextReaderApp";
 import StatusBar from "@/components/os/StatusBar";
 import { Dock } from "@/components/ui/dock";
 import {
@@ -37,6 +30,20 @@ import {
   PROJECT_WEB_SHORTCUTS,
 } from "@/lib/desktop-shortcuts";
 import { cn } from "@/lib/utils";
+
+const BrowserApp = lazy(() => import("@/components/os/apps/BrowserApp"));
+const CalculatorApp = lazy(() => import("@/components/os/apps/CalculatorApp"));
+const BlogApp = lazy(() => import("@/components/os/apps/BlogApp"));
+const FilesApp = lazy(async () => {
+  const module = await import("@/components/os/apps/FilesApp");
+  return { default: module.FilesApp };
+});
+const ImageViewerApp = lazy(
+  () => import("@/components/os/apps/ImageViewerApp"),
+);
+const NotesApp = lazy(() => import("@/components/os/apps/NotesApp"));
+const SnakeApp = lazy(() => import("@/components/os/apps/SnakeApp"));
+const TextReaderApp = lazy(() => import("@/components/os/apps/TextReaderApp"));
 
 interface DesktopProps {
   className?: string;
@@ -82,6 +89,15 @@ function DesktopShortcutButton({
         {label}
       </span>
     </button>
+  );
+}
+
+/** Keeps window bodies stable while a lazily loaded app chunk arrives. */
+function WindowLoading({ label }: { label: string }) {
+  return (
+    <div className="grid min-h-0 flex-1 place-items-center p-4 text-sm text-muted-foreground">
+      Loading {label}...
+    </div>
   );
 }
 
@@ -285,12 +301,14 @@ export function Desktop({
             ariaLabel={`Open ${shortcut.name}`}
             onClick={() => openInBrowser(shortcut.href)}
             icon={
-              <Image
+              <img
                 src={getShortcutIconSrc(shortcut, isDark)}
                 alt={`${shortcut.name} logo`}
                 width={48}
                 height={48}
                 className="h-8 w-8 rounded-[4px] object-contain"
+                decoding="async"
+                loading="lazy"
               />
             }
           />
@@ -306,6 +324,7 @@ export function Desktop({
               {
                 icon: Compass,
                 label: "Browser",
+                ariaLabel: "Open Browser",
                 onClick: () => {
                   openBrowser();
                 },
@@ -313,6 +332,7 @@ export function Desktop({
               {
                 icon: Folder,
                 label: "Files",
+                ariaLabel: "Open Files",
                 onClick: () => {
                   openFiles();
                   bringToFront("files");
@@ -321,6 +341,7 @@ export function Desktop({
               {
                 icon: Calculator,
                 label: "Calculator",
+                ariaLabel: "Open Calculator",
                 onClick: () => {
                   openCalc();
                   bringToFront("calc");
@@ -329,6 +350,7 @@ export function Desktop({
               {
                 icon: StickyNote,
                 label: "Notes",
+                ariaLabel: "Open Notes",
                 onClick: () => {
                   openNotes();
                   bringToFront("notes");
@@ -337,6 +359,7 @@ export function Desktop({
               {
                 icon: BookOpenText,
                 label: "Blog",
+                ariaLabel: "Open Blog",
                 onClick: () => {
                   openBlog();
                   bringToFront("blog");
@@ -345,6 +368,7 @@ export function Desktop({
               {
                 icon: isDark ? SunDim : Moon,
                 label: "Theme",
+                ariaLabel: "Toggle theme",
                 onClick: toggleTheme,
               },
             ]}
@@ -370,31 +394,33 @@ export function Desktop({
               initialWidth={980}
               initialHeight={600}
             >
-              <FilesApp
-                onOpenText={openTextReader}
-                onOpenImage={openImageViewer}
-                onOpenLink={({ href }) => openInBrowser(href)}
-                onOpenApp={({ appId }) => {
-                  if (appId === "calculator") {
-                    openCalc();
-                    bringToFront("calc");
-                  } else if (appId === "notes") {
-                    openNotes();
-                    bringToFront("notes");
-                  } else if (appId === "blog") {
-                    openBlog();
-                    bringToFront("blog");
-                  } else if (appId === "snake") {
-                    openSnake();
-                    bringToFront("snake");
-                  } else if (appId === "files") {
-                    openFiles();
-                    bringToFront("files");
-                  } else if (appId === "browser") {
-                    openBrowser();
-                  }
-                }}
-              />
+              <Suspense fallback={<WindowLoading label="Files" />}>
+                <FilesApp
+                  onOpenText={openTextReader}
+                  onOpenImage={openImageViewer}
+                  onOpenLink={({ href }) => openInBrowser(href)}
+                  onOpenApp={({ appId }) => {
+                    if (appId === "calculator") {
+                      openCalc();
+                      bringToFront("calc");
+                    } else if (appId === "notes") {
+                      openNotes();
+                      bringToFront("notes");
+                    } else if (appId === "blog") {
+                      openBlog();
+                      bringToFront("blog");
+                    } else if (appId === "snake") {
+                      openSnake();
+                      bringToFront("snake");
+                    } else if (appId === "files") {
+                      openFiles();
+                      bringToFront("files");
+                    } else if (appId === "browser") {
+                      openBrowser();
+                    }
+                  }}
+                />
+              </Suspense>
             </AppWindow>
           </div>
         </div>
@@ -419,7 +445,9 @@ export function Desktop({
               minWidth={460}
               minHeight={360}
             >
-              <BrowserApp initialUrl={browserState.url} />
+              <Suspense fallback={<WindowLoading label="Browser" />}>
+                <BrowserApp initialUrl={browserState.url} />
+              </Suspense>
             </AppWindow>
           </div>
         </div>
@@ -445,7 +473,9 @@ export function Desktop({
               minHeight={360}
               resizable={false}
             >
-              <CalculatorApp />
+              <Suspense fallback={<WindowLoading label="Calculator" />}>
+                <CalculatorApp />
+              </Suspense>
             </AppWindow>
           </div>
         </div>
@@ -468,7 +498,9 @@ export function Desktop({
               initialWidth={820}
               initialHeight={560}
             >
-              <NotesApp />
+              <Suspense fallback={<WindowLoading label="Notes" />}>
+                <NotesApp />
+              </Suspense>
             </AppWindow>
           </div>
         </div>
@@ -493,7 +525,9 @@ export function Desktop({
               minWidth={360}
               minHeight={420}
             >
-              <BlogApp initialSlug={initialBlogSlug} />
+              <Suspense fallback={<WindowLoading label="Blog" />}>
+                <BlogApp initialSlug={initialBlogSlug} />
+              </Suspense>
             </AppWindow>
           </div>
         </div>
@@ -516,10 +550,12 @@ export function Desktop({
               initialWidth={780}
               initialHeight={520}
             >
-              <TextReaderApp
-                fileName={textReader.fileName ?? "Untitled.txt"}
-                content={textReader.content ?? ""}
-              />
+              <Suspense fallback={<WindowLoading label="Text Reader" />}>
+                <TextReaderApp
+                  fileName={textReader.fileName ?? "Untitled.txt"}
+                  content={textReader.content ?? ""}
+                />
+              </Suspense>
             </AppWindow>
           </div>
         </div>
@@ -542,10 +578,12 @@ export function Desktop({
               initialWidth={720}
               initialHeight={560}
             >
-              <ImageViewerApp
-                fileName={imageViewer.fileName ?? "image"}
-                src={imageViewer.src ?? ""}
-              />
+              <Suspense fallback={<WindowLoading label="Image Viewer" />}>
+                <ImageViewerApp
+                  fileName={imageViewer.fileName ?? "image"}
+                  src={imageViewer.src ?? ""}
+                />
+              </Suspense>
             </AppWindow>
           </div>
         </div>
@@ -568,7 +606,9 @@ export function Desktop({
               initialWidth={520}
               initialHeight={640}
             >
-              <SnakeApp />
+              <Suspense fallback={<WindowLoading label="Snake" />}>
+                <SnakeApp />
+              </Suspense>
             </AppWindow>
           </div>
         </div>

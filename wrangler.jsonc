@@ -1,8 +1,8 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "main": ".open-next/worker.js",
+  "main": "@tanstack/react-start/server-entry",
   "name": "robin-build",
-  "compatibility_date": "2024-12-30",
+  "compatibility_date": "2026-06-20",
   "compatibility_flags": [
     // Enable Node.js API
     // see https://developers.cloudflare.com/workers/configuration/compatibility-flags/#nodejs-compatibility-flag
@@ -11,24 +11,7 @@
     // see https://developers.cloudflare.com/workers/configuration/compatibility-flags/#global-fetch-strictly-public
     "global_fetch_strictly_public"
   ],
-  "assets": {
-    "directory": ".open-next/assets",
-    "binding": "ASSETS"
-  },
-  "services": [
-    {
-      "binding": "WORKER_SELF_REFERENCE",
-      // The service must match the value of "name" above
-      "service": "robin-build"
-    }
-  ],
-  // Optional: enable ISR cache on R2 (required if using r2IncrementalCache in open-next.config.ts)
-  // 1) Create an R2 bucket in your Cloudflare account (e.g. "robin-build-next-inc-cache")
-  // 2) Set the bucket name here and keep the binding name EXACTLY "NEXT_INC_CACHE_R2_BUCKET"
-  "r2_buckets": [
-    {
-      "binding": "NEXT_INC_CACHE_R2_BUCKET",
-      "bucket_name": "robin-build-next-inc-cache"
-    }
-  ]
+  "observability": {
+    "enabled": true
+  }
 }

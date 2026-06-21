@@ -15,7 +15,6 @@ import {
   Image as ImageIcon,
   StickyNote,
 } from "lucide-react";
-import Image from "next/image";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { type TreeNode, TreeView } from "@/components/ui/tree-view";
 import {
@@ -101,12 +100,14 @@ const VFS_DATE = {
 
 /** Renders a compact website logo icon for link entries in the Files table. */
 const makeShortcutIcon = (src: string, alt: string): React.ReactNode => (
-  <Image
+  <img
     src={src}
     alt={alt}
     width={16}
     height={16}
     className="h-4 w-4 rounded-[3px] bg-zinc-900 object-contain p-[1px]"
+    decoding="async"
+    loading="lazy"
   />
 );
 

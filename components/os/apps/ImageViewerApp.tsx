@@ -19,7 +19,6 @@ export default function ImageViewerApp({
         {fileName}
       </div>
       <div className="grid flex-1 place-items-center overflow-auto p-2 md:p-3">
-        {/* biome-ignore lint/performance/noImgElement: This viewer must render arbitrary image sources at their natural size. */}
         <img
           src={src}
           alt={fileName}

@@ -1,7 +1,6 @@
 "use client";
 
 import { Check, Copy, Rss } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { BlogPostContent } from "@/components/blog/BlogPostContent";
 import { Button } from "@/components/ui/button";
@@ -15,11 +14,9 @@ interface BlogAppProps {
 
 const COPIED_STATE_DURATION_MS = 1600;
 
+/** Renders the desktop blog reader and keeps shareable blog URLs in sync. */
 export default function BlogApp({ className, initialSlug }: BlogAppProps) {
-  const pathname = usePathname();
-  const router = useRouter();
   const copiedTimerRef = useRef<number | null>(null);
-  const startedOnBlogRouteRef = useRef(pathname.startsWith("/blog"));
   const nativeHistoryInitializedRef = useRef(false);
   const posts = useMemo(() => getBlogPosts(), []);
   const firstPostSlug = posts[0]?.slug ?? "";
@@ -32,50 +29,33 @@ export default function BlogApp({ className, initialSlug }: BlogAppProps) {
     posts.find((post) => post.slug === selectedSlug) ?? posts[0];
 
   useEffect(() => {
-    if (!startedOnBlogRouteRef.current) {
-      if (!selectedPost) return;
-      const postPath = `/blog/${selectedPost.slug}`;
-      if (window.location.pathname !== postPath) {
-        if (nativeHistoryInitializedRef.current) {
-          window.history.pushState({}, "", postPath);
-        } else {
-          window.history.replaceState({}, "", postPath);
-          nativeHistoryInitializedRef.current = true;
-        }
-      }
-      return;
-    }
-
-    const maybeSlug = pathname.match(/^\/blog\/([^/]+)$/)?.[1];
-    if (maybeSlug && posts.some((post) => post.slug === maybeSlug)) {
-      setSelectedSlug(maybeSlug);
-      return;
-    }
-
     if (!selectedPost) return;
-    router.replace(`/blog/${selectedPost.slug}`);
-  }, [pathname, posts, router, selectedPost]);
+    const postPath = `/blog/${selectedPost.slug}`;
+    if (window.location.pathname === postPath) {
+      nativeHistoryInitializedRef.current = true;
+      return;
+    }
 
-  const selectPost = useCallback(
-    (slug: string) => {
-      if (copiedTimerRef.current !== null) {
-        window.clearTimeout(copiedTimerRef.current);
-        copiedTimerRef.current = null;
-      }
-      setCopied(false);
-      setSelectedSlug(slug);
-      if (startedOnBlogRouteRef.current) {
-        router.push(`/blog/${slug}`);
-        return;
-      }
-      window.history.pushState({}, "", `/blog/${slug}`);
-    },
-    [router],
-  );
+    if (nativeHistoryInitializedRef.current) {
+      window.history.pushState({}, "", postPath);
+    } else {
+      window.history.replaceState({}, "", postPath);
+      nativeHistoryInitializedRef.current = true;
+    }
+  }, [selectedPost]);
+
+  const selectPost = useCallback((slug: string) => {
+    if (copiedTimerRef.current !== null) {
+      window.clearTimeout(copiedTimerRef.current);
+      copiedTimerRef.current = null;
+    }
+    setCopied(false);
+    setSelectedSlug(slug);
+    window.history.pushState({}, "", `/blog/${slug}`);
+    nativeHistoryInitializedRef.current = true;
+  }, []);
 
   useEffect(() => {
-    if (startedOnBlogRouteRef.current) return;
-
     const syncNativeHistorySlug = () => {
       const maybeSlug =
         window.location.pathname.match(/^\/blog\/([^/]+)$/)?.[1];

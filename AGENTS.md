@@ -1,22 +1,25 @@
 # Repository Guidelines
 
-This project is a small “web OS” built with Next.js 15 + TypeScript, styled with Tailwind CSS v4, and deployed to Cloudflare Workers via OpenNext. Keep diffs minimal and focused.
+This project is a small “web OS” built with TanStack Start + TypeScript, styled with Tailwind CSS v4, and deployed to Cloudflare Workers through the Cloudflare Vite plugin. Keep diffs minimal and focused.
 
 ## Project Structure & Modules
 
-- `app/` — App Router; global styles in `app/globals.css`; terminal → Desktop flow in `app/page.tsx`.
+- `src/routes/` — TanStack Start file routes; root document in `src/routes/__root.tsx`.
+- `src/features/` — Route-owned feature surfaces such as the bootable home screen and Revolut personal pages.
+- `src/styles/globals.css` — Global Tailwind v4, shadcn, BlockNote, and font styles.
 - `components/os/` — Desktop, `AppWindow` (drag/resize), Dock, `StatusBar`, app windows (Files, Calculator, Notes).
 - `components/magicui/` — Magic UI widgets (`morphing-text`, terminal).
 - `components/ui/` — Primitives (`badge`, `button`, `calendar`, `sliding-number`, `noise`).
 - `lib/utils.ts` — `cn` helper. Path alias `@/*` maps to repo root.
-- Config: `next.config.ts`, `open-next.config.ts`, `wrangler.jsonc`, `biome.json`, `postcss.config.mjs`, `tsconfig.json`.
+- Config: `vite.config.ts`, `wrangler.jsonc`, `biome.json`, `components.json`, `tsconfig.json`.
 
 ## Dev, Build, Deploy
 
-- Dev: `bun dev` — Next dev with Cloudflare compat (`initOpenNextCloudflareForDev`).
+- Dev: `bun dev` — Vite dev server with TanStack Start.
+- Build: `bun run build` — Vite build plus TypeScript check.
 - Lint: `bun run lint`.
 - Preview (Workers): `bun run preview`.
-- Deploy (Workers): `bun run deploy` (OpenNext build + publish). Assets upload: `bun run upload`. Typegen: `bun run cf-typegen`.
+- Deploy (Workers): `bun run deploy`. Typegen: `bun run cf-typegen`.
 
 ## Architecture Notes
 
@@ -27,7 +30,7 @@ This project is a small “web OS” built with Next.js 15 + TypeScript, styled 
 ## Style & Conventions
 
 - TypeScript (strict), 2‑space indent. Components PascalCase; hooks `useX.ts`; route folders kebab‑case.
-- Prefer server‑first; add "use client" only when needed. Keep Tailwind class lists readable; compose via `cn(...)`.
+- Prefer route-level server rendering; isolate browser-only behavior in feature components. Keep Tailwind class lists readable; compose via `cn(...)`.
 - Format only touched files with Biome.
 
 ## Testing
@@ -36,8 +39,8 @@ This project is a small “web OS” built with Next.js 15 + TypeScript, styled 
 
 ## Security & Cloudflare
 
-- Secrets in `.env.local` (never commit). Only expose `NEXT_PUBLIC_` to the client.
-- Worker entry: `.open-next/worker.js`. Optional ISR cache via R2 (`wrangler.jsonc`: `NEXT_INC_CACHE_R2_BUCKET`).
+- Secrets in `.env.local` or `.dev.vars` (never commit). Only expose intentionally public `VITE_` variables to the client.
+- Worker entry: `@tanstack/react-start/server-entry`.
 
 ## Agent-Specific Notes
 

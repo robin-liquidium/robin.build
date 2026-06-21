@@ -1,10 +1,16 @@
+@import "@fontsource/geist-sans/400.css";
+@import "@fontsource/geist-sans/500.css";
+@import "@fontsource/geist-sans/600.css";
+@import "@fontsource/geist-sans/700.css";
+@import "@fontsource/geist-mono/400.css";
+@import "@fontsource/geist-mono/500.css";
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "@blocknote/core/fonts/inter.css";
 @import "@blocknote/shadcn/style.css";
 
 /* Ensure Tailwind picks up classes used by @blocknote/shadcn */
-@source "../node_modules/@blocknote/shadcn/**/*.{js,ts,jsx,tsx}";
+@source "../../node_modules/@blocknote/shadcn/**/*.{js,ts,jsx,tsx}";
 
 /* BlockNote overrides to match app aesthetics */
 .bn-container {
@@ -49,8 +55,6 @@
   color: #000;
 }
 
-/* Revert H1 sizing override – use BlockNote defaults */
-
 @custom-variant dark (&:is(.dark *));
 
 :root {
@@ -88,7 +92,7 @@
   --sidebar-ring: oklch(0.708 0 0);
   --font-sans: Geist, ui-sans-serif, sans-serif, system-ui;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: Geist Mono, ui-monospace, monospace;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
   --radius: 1rem;
   --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
@@ -141,7 +145,7 @@
   --sidebar-ring: oklch(0.439 0 0);
   --font-sans: Geist, ui-sans-serif, sans-serif, system-ui;
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-mono: Geist Mono, ui-monospace, monospace;
+  --font-mono: "Geist Mono", ui-monospace, monospace;
   --radius: 1rem;
   --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);

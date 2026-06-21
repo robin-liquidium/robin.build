@@ -119,6 +119,7 @@ export default function StatusBar() {
         <button
           type="button"
           className="inline-flex min-h-10 items-center sm:min-h-0"
+          aria-label="Open calendar"
           onClick={() => {
             setCalendarOpen((v) => !v);
             setClockOpen(false);

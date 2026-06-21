@@ -5,17 +5,19 @@ import { cn } from "@/lib/utils";
 
 interface DockProps {
   className?: string;
-  items: {
-    icon: LucideIcon;
-    label: string;
-    onClick?: () => void;
-  }[];
+  items: DockItem[];
   compact?: boolean;
 }
 
-interface DockIconButtonProps {
+/** Describes one launchable action in the desktop dock. */
+interface DockItem {
   icon: LucideIcon;
   label: string;
+  ariaLabel?: string;
+  onClick?: () => void;
+}
+
+interface DockIconButtonProps extends DockItem {
   onClick?: () => void;
   className?: string;
   compact?: boolean;
@@ -33,9 +35,11 @@ const floatingAnimation: Variants = {
 };
 
 const DockIconButton = React.forwardRef<HTMLButtonElement, DockIconButtonProps>(
-  ({ icon: Icon, label, onClick, className, compact }, ref) => {
+  ({ icon: Icon, label, ariaLabel, onClick, className, compact }, ref) => {
     return (
       <motion.button
+        type="button"
+        aria-label={ariaLabel ?? label}
         ref={ref}
         whileHover={{ scale: 1.1, y: -2 }}
         whileTap={{ scale: 0.95 }}
