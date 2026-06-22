@@ -6,6 +6,19 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar } from "@/components/ui/calendar";
 import { SlidingNumber } from "@/components/ui/sliding-number";
 
+const HOME_ROUTE = "/";
+
+type HomeNavigationTarget = Pick<Location, "assign" | "href">;
+
+/** Navigates home with an href fallback for browsers that block assign(). */
+export function navigateHome(target: HomeNavigationTarget = window.location) {
+  try {
+    target.assign(HOME_ROUTE);
+  } catch {
+    target.href = HOME_ROUTE;
+  }
+}
+
 export default function StatusBar() {
   const [now, setNow] = useState<Date>(new Date());
   const [calendarOpen, setCalendarOpen] = useState(false);
@@ -168,14 +181,7 @@ export default function StatusBar() {
       <button
         type="button"
         aria-label="Go to home"
-        onClick={() => {
-          try {
-            window.location.assign("/");
-          } catch {
-            // Fallback
-            window.location.href = "/";
-          }
-        }}
+        onClick={() => navigateHome()}
         className="pointer-events-auto inline-flex h-10 w-10 items-center justify-center rounded-md border border-border bg-background/70 text-foreground shadow-sm transition-colors hover:bg-foreground/10 sm:h-7 sm:w-7"
       >
         <Power className="h-5 w-5 sm:h-4 sm:w-4" />

@@ -115,9 +115,7 @@ export function HomeScreen({ initialApp, initialBlogSlug }: HomeScreenProps) {
   const [initialDesktopApp, setInitialDesktopApp] = useState<
     InitialDesktopApp | undefined
   >(initialApp);
-  const [userName, setUserName] = useState<string | null>(
-    startsInBlog ? "anon" : null,
-  );
+  const [userName, setUserName] = useState<string | null>(null);
   const desktopActive = launched && bootComplete;
 
   useEffect(() => {
@@ -133,7 +131,7 @@ export function HomeScreen({ initialApp, initialBlogSlug }: HomeScreenProps) {
     setInitialDesktopApp(app);
     setLaunched(true);
     if (app === "blog") {
-      setUserName("anon");
+      setUserName(null);
       setBootComplete(true);
     }
   };

@@ -6,7 +6,12 @@ import { cn } from "@/lib/utils";
 
 const morphTime = 1.5;
 const cooldownTime = 0.5;
+const textKeySeparator = "\u0000";
 
+/** Builds a stable key for detecting meaningful text-list changes. */
+const getTextsKey = (texts: string[]) => texts.join(textKeySeparator);
+
+/** Drives the imperative blur/opacity loop for the morphing text spans. */
 const useMorphingText = (texts: string[]) => {
   const textIndexRef = useRef(0);
   const morphRef = useRef(0);
@@ -96,6 +101,7 @@ interface MorphingTextProps {
   texts: string[];
 }
 
+/** Renders the two text layers mutated by the morphing animation loop. */
 const Texts: React.FC<Pick<MorphingTextProps, "texts">> = ({ texts }) => {
   const { text1Ref, text2Ref } = useMorphingText(texts);
   return (
@@ -144,7 +150,7 @@ export const MorphingText: React.FC<MorphingTextProps> = ({
       className,
     )}
   >
-    <Texts texts={texts} />
+    <Texts key={getTextsKey(texts)} texts={texts} />
     <SvgFilters />
   </div>
 );

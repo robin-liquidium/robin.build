@@ -16,6 +16,7 @@ import {
   Suspense,
   useCallback,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -44,6 +45,8 @@ const ImageViewerApp = lazy(
 const NotesApp = lazy(() => import("@/components/os/apps/NotesApp"));
 const SnakeApp = lazy(() => import("@/components/os/apps/SnakeApp"));
 const TextReaderApp = lazy(() => import("@/components/os/apps/TextReaderApp"));
+/** Name shown when the desktop opens without the terminal boot flow. */
+const DEFAULT_DESKTOP_NAME = "guest";
 
 interface DesktopProps {
   className?: string;
@@ -218,7 +221,11 @@ export function Desktop({
     const id = setInterval(() => setGreeting(compute()), 60_000);
     return () => clearInterval(id);
   }, []);
-  const displayName = name ?? "{name}";
+  const displayName = name ?? DEFAULT_DESKTOP_NAME;
+  const morphingTexts = useMemo(
+    () => ["good", greeting, displayName],
+    [greeting, displayName],
+  );
 
   useEffect(() => {
     if (filesOpen) bringToFront("files");
@@ -252,7 +259,7 @@ export function Desktop({
       {/* Subtle morphing greeting in the background */}
       <div className="pointer-events-none absolute inset-0 z-0 grid place-items-center">
         <MorphingText
-          texts={["good", greeting, displayName]}
+          texts={morphingTexts}
           className="text-foreground font-mono opacity-10"
         />
       </div>
