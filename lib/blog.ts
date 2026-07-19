@@ -17,6 +17,11 @@ export type BlogBlock =
       type: "code";
       language: string;
       code: string;
+    }
+  | {
+      type: "link";
+      href: string;
+      label: string;
     };
 
 export interface BlogPost {
@@ -31,6 +36,177 @@ export interface BlogPost {
 }
 
 export const BLOG_POSTS = [
+  {
+    slug: "building-dayline-macos-menu-bar",
+    title: "Building Dayline: Calendar, Linear, and notes in one macOS menu",
+    description:
+      "Dayline is a lightweight native macOS menu bar app that keeps Google Calendar, Linear issues, and local notes one click away.",
+    publishedAt: "2026-07-19",
+    updatedAt: "2026-07-19",
+    readingTime: "4 min read",
+    tags: ["macOS", "SwiftUI", "productivity", "open source"],
+    content: [
+      {
+        type: "paragraph",
+        text: "My day was hiding in three different apps.",
+      },
+      {
+        type: "paragraph",
+        text: "Meetings lived in Google Calendar. Work lived in Linear. Temporary thoughts, reminders, and things I did not want to forget lived in local notes.",
+      },
+      {
+        type: "paragraph",
+        text: "None of those tools was broken. The annoying part was having to keep opening them to answer tiny questions:",
+      },
+      {
+        type: "list",
+        items: [
+          "What is my next meeting?",
+          "Which issue should I be working on?",
+          "Where did I write that thing down?",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "Opening a full application or another browser tab every time felt ridiculous.",
+      },
+      {
+        type: "paragraph",
+        text: "So I built Dayline.",
+      },
+      {
+        type: "heading",
+        text: "One quiet place for the whole day",
+      },
+      {
+        type: "paragraph",
+        text: "Dayline is a native macOS app that lives entirely in the menu bar.",
+      },
+      {
+        type: "paragraph",
+        text: "There is no Dock icon and no dashboard demanding attention. Click the menu-bar item and your day appears. Click away and it disappears.",
+      },
+      {
+        type: "paragraph",
+        text: "The calendar section shows the remaining timed events for today, with tomorrow available when I want a head start. The current meeting stays visible until it is actually finished, while the next event and its countdown can sit directly in the menu bar.",
+      },
+      {
+        type: "paragraph",
+        text: "Linear issues live directly underneath. I can see assigned work, create an issue, copy its URL, change its status, or adjust its priority without opening Linear. The common actions have configurable keyboard shortcuts, because reaching for the mouse every time defeats the point.",
+      },
+      {
+        type: "paragraph",
+        text: "The final section is deliberately boring: plain local notes. The first line becomes the title, everything stays on this Mac, and capturing something takes seconds.",
+      },
+      {
+        type: "paragraph",
+        text: "That is the whole product. Calendar, work, and notes—one click away.",
+      },
+      {
+        type: "heading",
+        text: "Smallness was a design constraint",
+      },
+      {
+        type: "paragraph",
+        text: "Dayline could easily have turned into another productivity dashboard.",
+      },
+      {
+        type: "paragraph",
+        text: "I did not want that.",
+      },
+      {
+        type: "paragraph",
+        text: "The useful part is not having more information. It is removing the repeated context switch between the tools I already use.",
+      },
+      {
+        type: "paragraph",
+        text: "That shaped nearly every decision:",
+      },
+      {
+        type: "list",
+        items: [
+          "Menu-bar only",
+          "Native SwiftUI",
+          "Fast background refresh",
+          "Launch at login",
+          "Keyboard-first issue actions",
+          "Configurable ordering",
+          "No account system",
+          "No analytics or tracking",
+        ],
+      },
+      {
+        type: "paragraph",
+        text: "A good utility should disappear when you are not using it. Dayline should feel like part of macOS, not another service asking to become the centre of your life.",
+      },
+      {
+        type: "heading",
+        text: "Direct and private",
+      },
+      {
+        type: "paragraph",
+        text: "Dayline has no backend.",
+      },
+      {
+        type: "paragraph",
+        text: "Your Mac connects directly to Google Calendar and Linear over HTTPS using OAuth 2.0 with PKCE. Tokens are stored in the macOS Keychain. Notes stay on disk.",
+      },
+      {
+        type: "paragraph",
+        text: "There is no Dayline server sitting between you and those services. There is no separate Dayline account, advertising system, or analytics SDK quietly recording how you use the app.",
+      },
+      {
+        type: "paragraph",
+        text: "I wanted the privacy model to fit into one paragraph without bullshit.",
+      },
+      {
+        type: "heading",
+        text: "Building it natively",
+      },
+      {
+        type: "paragraph",
+        text: "Dayline is built with SwiftUI and Swift Package Manager.",
+      },
+      {
+        type: "paragraph",
+        text: "Going native mattered because this app spends most of its life waiting quietly in the menu bar. It should launch quickly, use almost no resources in the background, and behave like a proper macOS utility.",
+      },
+      {
+        type: "paragraph",
+        text: "The small surface also forced useful discipline. Every row, action, shortcut, and setting had to justify its space. If something required turning the menu into a miniature desktop app, it probably did not belong there.",
+      },
+      {
+        type: "paragraph",
+        text: "The result is a surprisingly capable app that still feels small.",
+      },
+      {
+        type: "heading",
+        text: "Free and open source",
+      },
+      {
+        type: "paragraph",
+        text: "Dayline is free and open source.",
+      },
+      {
+        type: "paragraph",
+        text: "You can inspect the code, build it yourself, or download the signed and notarized release. It currently requires macOS 26 or newer.",
+      },
+      {
+        type: "paragraph",
+        text: "If your day also lives somewhere between Calendar, Linear, and scattered notes, give it a try:",
+      },
+      {
+        type: "link",
+        href: "https://dayline.robin.build",
+        label: "Visit Dayline",
+      },
+      {
+        type: "link",
+        href: "https://github.com/robin-liquidium/dayline",
+        label: "View the source on GitHub",
+      },
+    ],
+  },
   {
     slug: "fix-codex-cli-colors-ssh-ghostty",
     title: "Fixing Codex CLI colors over SSH in Ghostty",

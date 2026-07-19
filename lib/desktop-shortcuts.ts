@@ -3,6 +3,13 @@
  */
 export const PROJECT_WEB_SHORTCUTS = [
   {
+    id: "dayline",
+    name: "Dayline",
+    host: "dayline.robin.build",
+    href: "https://dayline.robin.build",
+    iconSrc: "https://dayline.robin.build/images/icon-256.webp",
+  },
+  {
     id: "runesswap",
     name: "RunesSwap",
     host: "runesswap.app",
@@ -84,6 +91,7 @@ Finder (Files App)
 - Double-click any item to open it.
 
 Pinned Project Shortcuts
+- dayline.robin.build
 - runesswap.app
 - bitcoinpuppets.community
 - liquidium.fi

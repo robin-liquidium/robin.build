@@ -49,6 +49,7 @@ const SAMPLE_POST: BlogPost = {
     { type: "paragraph", text: "Paragraph" },
     { type: "list", items: ["One", "Two"] },
     { type: "code", language: "ts", code: "const value = 1;" },
+    { type: "link", href: "https://example.com", label: "Example link" },
   ],
 };
 
@@ -113,7 +114,10 @@ describe("site data", () => {
     }
   });
 
-  it("selects shortcut icons by theme with fallback", () => {
+  it("defines project shortcuts and selects their icons", () => {
+    const daylineShortcut = PROJECT_WEB_SHORTCUTS.find(
+      (shortcut) => shortcut.id === "dayline",
+    );
     const shortcutWithTheme = PROJECT_WEB_SHORTCUTS.find(
       (shortcut) => shortcut.id === "liquidium-fi",
     );
@@ -126,6 +130,10 @@ describe("site data", () => {
       fallbackShortcut,
       "fallback shortcut",
     );
+    expect(daylineShortcut).toMatchObject({
+      host: "dayline.robin.build",
+      href: "https://dayline.robin.build",
+    });
     expect(getShortcutIconSrc(themedShortcut, true)).toContain("dark");
     expect(getShortcutIconSrc(themedShortcut, false)).toContain("light");
     expect(getShortcutIconSrc(shortcutFallback, true)).toBe(
@@ -149,6 +157,10 @@ describe("blog content", () => {
     expect(screen.getByRole("list")).toBeVisible();
     expect(screen.getByText("One")).toBeVisible();
     expect(screen.getByText("const value = 1;")).toBeVisible();
+    expect(screen.getByRole("link", { name: "Example link" })).toHaveAttribute(
+      "href",
+      "https://example.com",
+    );
   });
 });
 

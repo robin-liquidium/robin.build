@@ -45,6 +45,20 @@ export function BlogPostContent({ post }: BlogPostContentProps) {
           );
         }
 
+        if (block.type === "link") {
+          return (
+            <a
+              className="block w-fit font-medium text-foreground underline decoration-foreground/30 underline-offset-4 transition-colors hover:decoration-foreground"
+              href={block.href}
+              key={blockKey}
+              rel="noreferrer"
+              target="_blank"
+            >
+              {block.label}
+            </a>
+          );
+        }
+
         return (
           <p className="text-base leading-7 text-foreground/80" key={blockKey}>
             {block.text}
