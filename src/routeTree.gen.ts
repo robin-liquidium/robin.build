@@ -9,18 +9,18 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RobotsDottxtRouteImport } from './routes/robots[.]txt'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as BlogIndexRouteImport } from './routes/blog/index'
-import { Route as RevolutPersonalTermsRouteImport } from './routes/revolut-personal/terms'
-import { Route as RevolutPersonalPrivacyRouteImport } from './routes/revolut-personal/privacy'
-import { Route as RevolutPersonalCallbackRouteImport } from './routes/revolut-personal/callback'
 import { Route as BlogSlugRouteImport } from './routes/blog/$slug'
+import { Route as RevolutPersonalCallbackRouteImport } from './routes/revolut-personal/callback'
+import { Route as RevolutPersonalPrivacyRouteImport } from './routes/revolut-personal/privacy'
+import { Route as RevolutPersonalTermsRouteImport } from './routes/revolut-personal/terms'
 
-const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
-  id: '/sitemap.xml',
-  path: '/sitemap.xml',
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
@@ -28,9 +28,9 @@ const RobotsDottxtRoute = RobotsDottxtRouteImport.update({
   path: '/robots.txt',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
@@ -38,14 +38,9 @@ const BlogIndexRoute = BlogIndexRouteImport.update({
   path: '/blog/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RevolutPersonalTermsRoute = RevolutPersonalTermsRouteImport.update({
-  id: '/revolut-personal/terms',
-  path: '/revolut-personal/terms',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const RevolutPersonalPrivacyRoute = RevolutPersonalPrivacyRouteImport.update({
-  id: '/revolut-personal/privacy',
-  path: '/revolut-personal/privacy',
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RevolutPersonalCallbackRoute = RevolutPersonalCallbackRouteImport.update({
@@ -53,9 +48,14 @@ const RevolutPersonalCallbackRoute = RevolutPersonalCallbackRouteImport.update({
   path: '/revolut-personal/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BlogSlugRoute = BlogSlugRouteImport.update({
-  id: '/blog/$slug',
-  path: '/blog/$slug',
+const RevolutPersonalPrivacyRoute = RevolutPersonalPrivacyRouteImport.update({
+  id: '/revolut-personal/privacy',
+  path: '/revolut-personal/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RevolutPersonalTermsRoute = RevolutPersonalTermsRouteImport.update({
+  id: '/revolut-personal/terms',
+  path: '/revolut-personal/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -136,11 +136,11 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/sitemap.xml': {
-      id: '/sitemap.xml'
-      path: '/sitemap.xml'
-      fullPath: '/sitemap.xml'
-      preLoaderRoute: typeof SitemapDotxmlRouteImport
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/robots.txt': {
@@ -150,11 +150,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RobotsDottxtRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/blog/': {
@@ -164,18 +164,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BlogIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/revolut-personal/terms': {
-      id: '/revolut-personal/terms'
-      path: '/revolut-personal/terms'
-      fullPath: '/revolut-personal/terms'
-      preLoaderRoute: typeof RevolutPersonalTermsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/revolut-personal/privacy': {
-      id: '/revolut-personal/privacy'
-      path: '/revolut-personal/privacy'
-      fullPath: '/revolut-personal/privacy'
-      preLoaderRoute: typeof RevolutPersonalPrivacyRouteImport
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/revolut-personal/callback': {
@@ -185,11 +178,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RevolutPersonalCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/blog/$slug': {
-      id: '/blog/$slug'
-      path: '/blog/$slug'
-      fullPath: '/blog/$slug'
-      preLoaderRoute: typeof BlogSlugRouteImport
+    '/revolut-personal/privacy': {
+      id: '/revolut-personal/privacy'
+      path: '/revolut-personal/privacy'
+      fullPath: '/revolut-personal/privacy'
+      preLoaderRoute: typeof RevolutPersonalPrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/revolut-personal/terms': {
+      id: '/revolut-personal/terms'
+      path: '/revolut-personal/terms'
+      fullPath: '/revolut-personal/terms'
+      preLoaderRoute: typeof RevolutPersonalTermsRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

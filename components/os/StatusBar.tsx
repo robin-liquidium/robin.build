@@ -208,7 +208,7 @@ export default function StatusBar() {
             <Calendar
               mode="single"
               selected={now}
-              initialFocus
+              autoFocus
               classNames={{
                 day_button:
                   "pointer-events-none cursor-default group-data-[selected]:rounded-full hover:rounded-full group-[.range-start]:rounded-full group-[.range-end]:rounded-full group-[.range-middle]:rounded-full",
