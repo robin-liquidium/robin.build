@@ -224,6 +224,7 @@ class TestIntersectionObserver {
   readonly callback: IntersectionObserverCallback;
   readonly root = null;
   readonly rootMargin = "";
+  readonly scrollMargin = "";
   readonly thresholds: number[] = [];
 
   /** Stores the observer callback so tests can run in-view code immediately. */
