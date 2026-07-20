@@ -35,7 +35,7 @@ export interface BlogPost {
   content: BlogBlock[];
 }
 
-export const BLOG_POSTS = [
+export const BLOG_POSTS: BlogPost[] = [
   {
     slug: "building-dayline-macos-menu-bar",
     title: "Building Dayline: Calendar, Linear, and notes in one macOS menu",
@@ -535,7 +535,7 @@ tput colors`,
       },
     ],
   },
-] satisfies BlogPost[];
+];
 
 export const getBlogPosts = (): BlogPost[] =>
   [...BLOG_POSTS].sort(
