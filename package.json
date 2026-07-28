@@ -39,7 +39,7 @@
     "wrangler": "^4.115.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "^2.5.6",
+    "@biomejs/biome": "2.5.6",
     "@cloudflare/vite-plugin": "^1.48.0",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/jest-dom": "^7.0.0",
@@ -59,11 +59,11 @@
     "vitest": "^4.1.10"
   },
   "overrides": {
+    "js-yaml": "4.3.0",
     "prosemirror-history": "1.5.0",
     "prosemirror-model": "1.25.11",
     "prosemirror-state": "1.4.4",
     "prosemirror-transform": "1.12.0",
-    "prosemirror-view": "1.42.1",
-    "js-yaml": "4.3.0"
+    "prosemirror-view": "1.42.1"
   }
 }
