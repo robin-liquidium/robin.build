@@ -11,6 +11,12 @@
     // see https://developers.cloudflare.com/workers/configuration/compatibility-flags/#global-fetch-strictly-public
     "global_fetch_strictly_public"
   ],
+  "routes": [
+    {
+      "pattern": "robin.build",
+      "custom_domain": true
+    }
+  ],
   "observability": {
     "enabled": true
   }
