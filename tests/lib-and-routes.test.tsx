@@ -3,6 +3,7 @@ import React from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it, vi } from "vitest";
 import { BlogPostContent } from "@/components/blog/BlogPostContent";
+import * as blog from "@/lib/blog";
 import {
   BLOG_POSTS,
   type BlogPost,
@@ -207,20 +208,16 @@ describe("routes", () => {
   });
 
   it("serves sitemap.xml when there are no blog posts", async () => {
-    vi.resetModules();
-    vi.doMock("@/lib/blog", () => ({
-      getBlogPostUrl: (slug: string) => `${SITE_URL}/blog/${slug}`,
-      getBlogPosts: () => [],
-    }));
-
-    const { Route } = await import("@/src/routes/sitemap[.]xml");
-    const response = await requireRouteServer(
-      asTestRoute(Route),
-    ).handlers.GET();
-    expect(await response.text()).toContain(`<loc>${SITE_URL}/blog</loc>`);
-
-    vi.doUnmock("@/lib/blog");
-    vi.resetModules();
+    const getPosts = vi.spyOn(blog, "getBlogPosts").mockReturnValue([]);
+    try {
+      const { Route } = await import("@/src/routes/sitemap[.]xml");
+      const response = await requireRouteServer(
+        asTestRoute(Route),
+      ).handlers.GET();
+      expect(await response.text()).toContain(`<loc>${SITE_URL}/blog</loc>`);
+    } finally {
+      getPosts.mockRestore();
+    }
   });
 
   it("renders the index route metadata and component", async () => {
@@ -253,18 +250,15 @@ describe("routes", () => {
   });
 
   it("renders the blog index desktop when there are no posts", async () => {
-    vi.resetModules();
-    vi.doMock("@/lib/blog", () => ({
-      getBlogPosts: () => [],
-    }));
-
-    const { Route } = await import("@/src/routes/blog/index");
-    const route = asTestRoute(Route);
-    render(React.createElement(route.component));
-    expect(screen.getByLabelText("robin.build")).toBeVisible();
-
-    vi.doUnmock("@/lib/blog");
-    vi.resetModules();
+    const getPosts = vi.spyOn(blog, "getBlogPosts").mockReturnValue([]);
+    try {
+      const { Route } = await import("@/src/routes/blog/index");
+      const route = asTestRoute(Route);
+      render(React.createElement(route.component));
+      expect(screen.getByLabelText("robin.build")).toBeVisible();
+    } finally {
+      getPosts.mockRestore();
+    }
   });
 
   it("builds blog post metadata for known and missing slugs", async () => {
