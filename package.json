@@ -61,7 +61,7 @@
   "overrides": {
     "browserslist": "4.28.9",
     "js-yaml": "4.3.2",
-    "nanoid": "3.3.18",
+    "nanoid": "3.3.19",
     "postcss": "8.5.28",
     "prosemirror-history": "1.5.0",
     "prosemirror-model": "1.25.11",
