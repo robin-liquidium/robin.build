@@ -166,7 +166,10 @@ export function HomeScreen({ initialApp, initialBlogSlug }: HomeScreenProps) {
                 : "pointer-events-none translate-y-2 opacity-0")
             }
           >
-            <InteractiveHoverButton onClick={() => launchDesktop()}>
+            <InteractiveHoverButton
+              disabled={launched}
+              onClick={() => launchDesktop()}
+            >
               Continue
             </InteractiveHoverButton>
           </div>

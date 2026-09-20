@@ -467,9 +467,11 @@ describe("Desktop and Snake app", () => {
           vi.advanceTimersByTime(2000);
           await Promise.resolve();
         });
-        fireEvent.click(
-          screen.getByRole("button", { name: "Continue Continue" }),
-        );
+        const continueButton = screen.getByRole("button", {
+          name: "Continue Continue",
+        });
+        fireEvent.click(continueButton);
+        expect(continueButton).toBeDisabled();
         expect(screen.getByText("starting robin.build...")).toBeVisible();
 
         vi.useRealTimers();
@@ -492,6 +494,18 @@ describe("Desktop and Snake app", () => {
             screen.queryByRole("dialog", { name: "Blog" }),
           ).not.toBeInTheDocument();
         }
+
+        const desktopShortcut = screen.getByRole("button", {
+          name: "Open desktop README",
+        });
+        expect(continueButton).toBeDisabled();
+        continueButton.focus();
+        expect(continueButton).not.toHaveFocus();
+        await user.keyboard("{Enter}");
+        expect(desktopShortcut).toBeInTheDocument();
+        expect(
+          screen.queryByText("starting robin.build..."),
+        ).not.toBeInTheDocument();
       } finally {
         vi.useRealTimers();
       }
