@@ -464,7 +464,7 @@ describe("Desktop and Snake app", () => {
       vi.advanceTimersByTime(2000);
       await Promise.resolve();
     });
-    fireEvent.click(screen.getByRole("button", { name: "Blog", exact: true }));
+    fireEvent.click(screen.getByRole("button", { name: "Blog" }));
     expect(document.body.style.overflow).toBe("hidden");
     unmount();
 
@@ -475,13 +475,13 @@ describe("Desktop and Snake app", () => {
     });
     fireEvent.click(screen.getByRole("button", { name: "Continue Continue" }));
     expect(screen.getByText("starting robin.build...")).toBeVisible();
-    fireEvent.click(screen.getByRole("button", { name: "Skip", exact: true }));
+    fireEvent.click(screen.getByRole("button", { name: "Skip" }));
     expect(
       screen.queryByText("starting robin.build..."),
     ).not.toBeInTheDocument();
     expect(document.body.style.overflow).toBe("hidden");
     expect(
-      screen.queryByRole("button", { name: "Skip", exact: true }),
+      screen.queryByRole("button", { name: "Skip" }),
     ).not.toBeInTheDocument();
     vi.useRealTimers();
   });
