@@ -50,7 +50,7 @@ This project is a small “web OS” built with TanStack Start + TypeScript, sty
 
 ## UI
 
-- we're using shadcn components as well as Magic UI and 21st.dev. Always read relevant docs using context7 when working with any of these libraries. Always follow best practices when using them.
+- We use shadcn components, Magic UI, and 21st.dev. Consult current official documentation when introducing or changing library/API integration behavior, upgrading dependencies, or resolving uncertain or version-sensitive behavior. Use Context7 when available, otherwise official documentation directly. Routine edits that preserve an established local pattern do not require a fresh lookup. Do not guess APIs.
 - Always design everything so it's responsive and works on all screen sizes, as well as mobile, tablet, and desktop. make sure it looks great on all screen sizes and devices and also works great on all.
 - use lucide.dev icons for everything, never custom code icons unless instructed.
 - Always design for both dark and light theme so that everything always looks good in both themes.
