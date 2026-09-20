@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useDragControls, useMotionValue } from "framer-motion";
+import { Minus, Plus, X } from "lucide-react";
 import { useEffect, useId, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
@@ -236,7 +237,7 @@ export function AppWindow({
         <div
           className={cn(
             "flex items-center pr-2",
-            isMobile ? "gap-0 pr-1.5" : "gap-2",
+            isMobile ? "gap-0 pr-1.5" : "gap-0",
           )}
         >
           <button
@@ -245,15 +246,14 @@ export function AppWindow({
             aria-label="Close"
             onClick={onClose}
             className={cn(
-              "grid place-items-center rounded-full transition-transform hover:scale-105",
-              isMobile ? "h-9 w-8" : "h-4 w-4",
+              "group relative grid place-items-center rounded-full transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+              isMobile ? "h-9 w-8" : "h-6 w-6",
             )}
           >
-            <span
-              className={cn(
-                "rounded-full bg-red-500",
-                isMobile ? "h-3.5 w-3.5" : "h-2.5 w-2.5",
-              )}
+            <span className="rounded-full bg-red-500 h-4 w-4" />
+            <X
+              aria-hidden
+              className="absolute h-2.5 w-2.5 text-black/70 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
             />
           </button>
           <button
@@ -262,15 +262,14 @@ export function AppWindow({
             aria-label="Minimize"
             onClick={onMinimize}
             className={cn(
-              "grid place-items-center rounded-full transition-transform hover:scale-105",
-              isMobile ? "h-9 w-8" : "h-4 w-4",
+              "group relative grid place-items-center rounded-full transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+              isMobile ? "h-9 w-8" : "h-6 w-6",
             )}
           >
-            <span
-              className={cn(
-                "rounded-full bg-yellow-500",
-                isMobile ? "h-3.5 w-3.5" : "h-2.5 w-2.5",
-              )}
+            <span className="rounded-full bg-yellow-500 h-4 w-4" />
+            <Minus
+              aria-hidden
+              className="absolute h-2.5 w-2.5 text-black/70 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
             />
           </button>
           <button
@@ -284,15 +283,14 @@ export function AppWindow({
               setMaximized((v) => !v);
             }}
             className={cn(
-              "grid place-items-center rounded-full transition-transform hover:scale-105",
-              isMobile ? "h-9 w-8" : "h-4 w-4",
+              "group relative grid place-items-center rounded-full transition-transform hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
+              isMobile ? "h-9 w-8" : "h-6 w-6",
             )}
           >
-            <span
-              className={cn(
-                "rounded-full bg-green-500",
-                isMobile ? "h-3.5 w-3.5" : "h-2.5 w-2.5",
-              )}
+            <span className="rounded-full bg-green-500 h-4 w-4" />
+            <Plus
+              aria-hidden
+              className="absolute h-2.5 w-2.5 text-black/70 opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100"
             />
           </button>
         </div>

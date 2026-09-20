@@ -10,7 +10,6 @@ import {
   TypingAnimation,
   useTerminalSequenceItem,
 } from "@/components/magicui/terminal";
-import { cn } from "@/lib/utils";
 
 const TERMINAL_NAME_INPUT_ID = "terminal-name-input";
 type InitialDesktopApp = "blog";
@@ -118,22 +117,14 @@ export function HomeScreen({ initialApp, initialBlogSlug }: HomeScreenProps) {
   const [userName, setUserName] = useState<string | null>(null);
   const desktopActive = launched && bootComplete;
 
-  useEffect(() => {
-    if (!launched) return;
-    if (initialDesktopApp === "blog") return;
-    setBootComplete(false);
-  }, [launched, initialDesktopApp]);
-
   useDesktopScrollLock(desktopActive);
 
-  /** Launches straight into a named desktop app without replaying the boot flow. */
-  const launchDesktop = (app?: InitialDesktopApp) => {
+  /** Starts the normal boot flow or opens the desktop immediately. */
+  const launchDesktop = (app?: InitialDesktopApp, skipBoot = false) => {
     setInitialDesktopApp(app);
     setLaunched(true);
-    if (app === "blog") {
-      setUserName(null);
-      setBootComplete(true);
-    }
+    setUserName(null);
+    setBootComplete(skipBoot || app === "blog");
   };
 
   return (
@@ -175,27 +166,40 @@ export function HomeScreen({ initialApp, initialBlogSlug }: HomeScreenProps) {
                 : "pointer-events-none translate-y-2 opacity-0")
             }
           >
-            <InteractiveHoverButton onClick={() => launchDesktop()}>
+            <InteractiveHoverButton
+              disabled={launched}
+              onClick={() => launchDesktop()}
+            >
               Continue
             </InteractiveHoverButton>
           </div>
         </div>
       </div>
 
-      <button
-        type="button"
-        className={cn(
-          "fixed inset-x-0 bottom-5 z-20 mx-auto w-fit rounded-md px-3 py-2",
-          "font-mono text-xs text-muted-foreground underline-offset-4",
-          "transition-colors hover:text-foreground hover:underline",
-          showCta && !launched
-            ? "pointer-events-auto opacity-100"
-            : "pointer-events-none opacity-0",
-        )}
-        onClick={() => launchDesktop("blog")}
-      >
-        Skip to blog
-      </button>
+      {!desktopActive && (
+        <div className="fixed inset-x-0 bottom-5 z-20 mx-auto flex w-fit items-center gap-2">
+          <button
+            type="button"
+            className="rounded-md px-3 py-2 font-mono text-xs text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+            onClick={() => launchDesktop(undefined, true)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") event.stopPropagation();
+            }}
+          >
+            Skip
+          </button>
+          <button
+            type="button"
+            className="rounded-md px-3 py-2 font-mono text-xs text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
+            onClick={() => launchDesktop("blog")}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") event.stopPropagation();
+            }}
+          >
+            Blog
+          </button>
+        </div>
+      )}
 
       {launched && !bootComplete ? (
         <div

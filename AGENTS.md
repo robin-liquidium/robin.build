@@ -1,56 +1,23 @@
-# Repository Guidelines
+# Repository guide
 
-This project is a small “web OS” built with TanStack Start + TypeScript, styled with Tailwind CSS v4, and deployed to Cloudflare Workers through the Cloudflare Vite plugin. Keep diffs minimal and focused.
+A web desktop built with TanStack Start, React, TypeScript, and Tailwind CSS, deployed to Cloudflare Workers. Use Bun. See [README.md](README.md) for the project layout.
 
-## Project Structure & Modules
+## Commands
 
-- `src/routes/` — TanStack Start file routes; root document in `src/routes/__root.tsx`.
-- `src/features/` — Route-owned feature surfaces such as the bootable home screen and Revolut personal pages.
-- `src/styles/globals.css` — Global Tailwind v4, shadcn, BlockNote, and font styles.
-- `components/os/` — Desktop, `AppWindow` (drag/resize), Dock, `StatusBar`, app windows (Files, Calculator, Notes).
-- `components/magicui/` — Magic UI widgets (`morphing-text`, terminal).
-- `components/ui/` — Primitives (`badge`, `button`, `calendar`, `sliding-number`, `noise`).
-- `lib/utils.ts` — `cn` helper. Path alias `@/*` maps to repo root.
-- Config: `vite.config.ts`, `wrangler.jsonc`, `biome.json`, `components.json`, `tsconfig.json`.
+- `bun dev` — local development server on port 3000.
+- `bun run test` — run Vitest and React Testing Library tests in `tests/`; append a test file path to run only that file.
+- `bun run test:coverage` — run tests with the coverage requirements in `vitest.config.ts`.
+- `bunx biome check <files>` — check edited files; format only files you touched. `bun run lint` checks the whole repo.
+- `bun run build` — production build and TypeScript check.
+- `bun run preview` — build and preview locally.
+- `bun run deploy` — build and deploy using the generated `dist/server/wrangler.json`; retain this config path when invoking Wrangler directly.
 
-## Dev, Build, Deploy
+The complete CI checks are defined in [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
-- Dev: `bun dev` — Vite dev server with TanStack Start.
-- Build: `bun run build` — Vite build plus TypeScript check.
-- Lint: `bun run lint`.
-- Preview (Workers): `bun run preview`.
-- Deploy (Workers): `bun run deploy`. Typegen: `bun run cf-typegen`.
+## Repo conventions
 
-## Architecture Notes
-
-- Boot sequence: terminal runs and prompts for name; then Desktop mounts. Background noise + `MorphingText` show a time‑aware greeting (“good morning/evening {name}”).
-- Windows: draggable/resizable; last interaction brings to front; Dock clicks also refocus existing windows.
-- Status bar: animated HH:MM:SS via `SlidingNumber`; clicking the date opens a view‑only `Calendar`, with fullscreen and power controls.
-
-## Style & Conventions
-
-- TypeScript (strict), 2‑space indent. Components PascalCase; hooks `useX.ts`; route folders kebab‑case.
-- Prefer route-level server rendering; isolate browser-only behavior in feature components. Keep Tailwind class lists readable; compose via `cn(...)`.
-- Format only touched files with Biome.
-
-## Testing
-
-- None configured. If adding, use Vitest + React Testing Library; colocate `*.test.ts(x)` and add a `test` script.
-
-## Security & Cloudflare
-
-- Secrets in `.env.local` or `.dev.vars` (never commit). Only expose intentionally public `VITE_` variables to the client.
-- Worker entry: `@tanstack/react-start/server-entry`.
-
-## Agent-Specific Notes
-
-- Make minimal diffs. Touch only what you change. Run Biome checks on edited files. Keep things KISS and DRY.
-- NEVER ignore lint issues; NEVER use the 'any' type and try to avoid 'unknown' type.
-- Do NOT use magic strings, use enums or constants instead if possible.
-
-## UI
-
-- We use shadcn components, Magic UI, and 21st.dev. Consult current official documentation when introducing or changing library/API integration behavior, upgrading dependencies, or resolving uncertain or version-sensitive behavior. Use Context7 when available, otherwise official documentation directly. Routine edits that preserve an established local pattern do not require a fresh lookup. Do not guess APIs.
-- Always design everything so it's responsive and works on all screen sizes, as well as mobile, tablet, and desktop. make sure it looks great on all screen sizes and devices and also works great on all.
-- use lucide.dev icons for everything, never custom code icons unless instructed.
-- Always design for both dark and light theme so that everything always looks good in both themes.
+- `@/` imports resolve to the repository root, not `src/`.
+- Routes live in `src/routes/`. Do not manually edit generated `src/routeTree.gen.ts`.
+- Keep browser-only APIs out of server rendering paths.
+- Reuse existing components in `components/ui/` and `components/magicui/`, and use `lucide-react` icons.
+- Preserve mobile behavior and both light and dark themes when changing UI.
