@@ -456,6 +456,48 @@ describe("AppWindow and status bar", () => {
 });
 
 describe("Desktop and Snake app", () => {
+  it.each(["Skip", "Blog"])(
+    "activates %s with Enter during terminal boot",
+    async (label) => {
+      vi.useFakeTimers();
+      const user = userEvent.setup();
+      try {
+        render(<HomeScreen />);
+        await act(async () => {
+          vi.advanceTimersByTime(2000);
+          await Promise.resolve();
+        });
+        fireEvent.click(
+          screen.getByRole("button", { name: "Continue Continue" }),
+        );
+        expect(screen.getByText("starting robin.build...")).toBeVisible();
+
+        vi.useRealTimers();
+        screen.getByRole("button", { name: label }).focus();
+        await user.keyboard("{Enter}");
+
+        expect(
+          screen.queryByText("starting robin.build..."),
+        ).not.toBeInTheDocument();
+        expect(document.body.style.overflow).toBe("hidden");
+        if (label === "Blog") {
+          expect(
+            await screen.findByRole("dialog", { name: "Blog" }),
+          ).toBeVisible();
+        } else {
+          expect(
+            await screen.findByRole("button", { name: "Open desktop README" }),
+          ).toBeVisible();
+          expect(
+            screen.queryByRole("dialog", { name: "Blog" }),
+          ).not.toBeInTheDocument();
+        }
+      } finally {
+        vi.useRealTimers();
+      }
+    },
+  );
+
   it("launches HomeScreen through skip and continue flows", async () => {
     vi.useFakeTimers();
     const { unmount } = render(<HomeScreen />);

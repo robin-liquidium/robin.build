@@ -179,6 +179,9 @@ export function HomeScreen({ initialApp, initialBlogSlug }: HomeScreenProps) {
             type="button"
             className="rounded-md px-3 py-2 font-mono text-xs text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
             onClick={() => launchDesktop(undefined, true)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") event.stopPropagation();
+            }}
           >
             Skip
           </button>
@@ -186,6 +189,9 @@ export function HomeScreen({ initialApp, initialBlogSlug }: HomeScreenProps) {
             type="button"
             className="rounded-md px-3 py-2 font-mono text-xs text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline"
             onClick={() => launchDesktop("blog")}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") event.stopPropagation();
+            }}
           >
             Blog
           </button>
