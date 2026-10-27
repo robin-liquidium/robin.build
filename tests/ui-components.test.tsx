@@ -42,6 +42,10 @@ function ManualTerminalItem() {
   ) : null;
 }
 
+function CustomChevron() {
+  return <CalendarDays aria-label="custom calendar nav" />;
+}
+
 describe("primitive components", () => {
   it("renders button and badge variants including asChild composition", () => {
     render(
@@ -91,7 +95,7 @@ describe("primitive components", () => {
         className="calendar-test"
         classNames={{ day_button: "custom-day" }}
         components={{
-          Chevron: () => <CalendarDays aria-label="custom calendar nav" />,
+          Chevron: CustomChevron,
         }}
       />,
     );
