@@ -8,6 +8,19 @@ import { cn } from "@/lib/utils";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
+function CalendarChevron(
+  props: React.SVGProps<SVGSVGElement> & { orientation?: string },
+) {
+  if (props.orientation === "left") {
+    return (
+      <ChevronLeft size={16} strokeWidth={2} {...props} aria-hidden="true" />
+    );
+  }
+  return (
+    <ChevronRight size={16} strokeWidth={2} {...props} aria-hidden="true" />
+  );
+}
+
 function Calendar({
   className,
   classNames,
@@ -54,28 +67,8 @@ function Calendar({
     mergedClassNames[key] = cn(defaultClassNames[key], userClassName);
   }
 
-  const defaultComponents = {
-    Chevron: (
-      props: React.SVGProps<SVGSVGElement> & { orientation?: string },
-    ) => {
-      if (props.orientation === "left") {
-        return (
-          <ChevronLeft
-            size={16}
-            strokeWidth={2}
-            {...props}
-            aria-hidden="true"
-          />
-        );
-      }
-      return (
-        <ChevronRight size={16} strokeWidth={2} {...props} aria-hidden="true" />
-      );
-    },
-  };
-
   const mergedComponents = {
-    ...defaultComponents,
+    Chevron: CalendarChevron,
     ...userComponents,
   };
 
