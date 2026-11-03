@@ -56,17 +56,21 @@ export default function NotesApp({ className }: NotesAppProps) {
   useEffect(() => {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
-      const parsed: Note[] = raw ? JSON.parse(raw) : [];
+      const parsed = (raw ? JSON.parse(raw) : []) as Note[];
       setNotes(parsed);
       setActiveId(null); // start with empty editor; create on type
-    } catch {}
+    } catch {
+      // Unreadable or corrupt saved notes: start empty.
+    }
   }, []);
 
   // Persist
   useEffect(() => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
-    } catch {}
+    } catch {
+      // Storage can be blocked or full; notes stay in memory.
+    }
   }, [notes]);
 
   const activeNote = useMemo(

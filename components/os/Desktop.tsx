@@ -195,16 +195,16 @@ export function Desktop({
   // Theme toggle for Dock
   const [isDark, setIsDark] = useState(false);
   useEffect(() => {
-    try {
-      setIsDark(document.documentElement.classList.contains("dark"));
-    } catch {}
+    setIsDark(document.documentElement.classList.contains("dark"));
   }, []);
   const toggleTheme = useCallback(() => {
     try {
       const dark = document.documentElement.classList.toggle("dark");
       setIsDark(dark);
       localStorage.setItem("theme", dark ? "dark" : "light");
-    } catch {}
+    } catch {
+      // Storage can be blocked; the choice still applies for this session.
+    }
   }, []);
 
   // Time-aware greeting for background morphing text
@@ -436,7 +436,7 @@ export function Desktop({
       {browserState.open && (
         <div
           className="pointer-events-none absolute inset-0"
-          style={{ zIndex: (zMap as Record<string, number>).browser ?? 20 }}
+          style={{ zIndex: zMap.browser ?? 20 }}
         >
           <div
             className="pointer-events-auto"
@@ -543,7 +543,7 @@ export function Desktop({
       {textReader.open && (
         <div
           className="pointer-events-none absolute inset-0"
-          style={{ zIndex: (zMap as Record<string, number>).text ?? 20 }}
+          style={{ zIndex: zMap.text ?? 20 }}
         >
           <div
             className="pointer-events-auto"
@@ -571,7 +571,7 @@ export function Desktop({
       {imageViewer.open && (
         <div
           className="pointer-events-none absolute inset-0"
-          style={{ zIndex: (zMap as Record<string, number>).image ?? 20 }}
+          style={{ zIndex: zMap.image ?? 20 }}
         >
           <div
             className="pointer-events-auto"
@@ -599,7 +599,7 @@ export function Desktop({
       {snakeOpen && (
         <div
           className="pointer-events-none absolute inset-0"
-          style={{ zIndex: (zMap as Record<string, number>).snake ?? 20 }}
+          style={{ zIndex: zMap.snake ?? 20 }}
         >
           <div
             className="pointer-events-auto"

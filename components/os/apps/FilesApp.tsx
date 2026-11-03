@@ -392,7 +392,9 @@ export function FilesApp({
         if (onOpenLink) return;
         try {
           window.open(entry.href, "_blank", "noopener,noreferrer");
-        } catch {}
+        } catch {
+          // A blocked popup is not an error worth surfacing here.
+        }
         return;
       }
       if (entry.type === "text" && entry.content) {

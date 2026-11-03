@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import type React from "react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "bun:test";
 import { CallbackClient } from "@/src/features/revolut-personal/CallbackClient";
 import { DocumentPage } from "@/src/features/revolut-personal/DocumentPage";
 

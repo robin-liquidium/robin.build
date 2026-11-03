@@ -76,7 +76,7 @@ function BlogPostRoute() {
       <HomeScreen initialApp="blog" initialBlogSlug={post.slug} />
       <script
         type="application/ld+json"
-        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is serialized from typed local blog data.
+        // JSON-LD is serialized from typed local blog data.
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
     </>

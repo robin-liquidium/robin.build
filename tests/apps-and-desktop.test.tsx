@@ -1,6 +1,15 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  type Mock,
+  setSystemTime,
+  vi,
+} from "bun:test";
 import { AppWindow } from "@/components/os/AppWindow";
 import BlogApp from "@/components/os/apps/BlogApp";
 import BrowserApp from "@/components/os/apps/BrowserApp";
@@ -48,7 +57,7 @@ function createTestUuidGenerator() {
   });
 }
 
-const blockNoteState = vi.hoisted(() => ({
+const blockNoteState = {
   document: [
     {
       content: "Typed note",
@@ -57,7 +66,7 @@ const blockNoteState = vi.hoisted(() => ({
     },
   ],
   replaceBlocks: vi.fn(),
-}));
+};
 
 vi.mock("@blocknote/react", () => ({
   useCreateBlockNote: () => ({
@@ -97,16 +106,18 @@ function getCalculatorDisplay(value: string) {
 
 /** Mocks matchMedia for a single render pass. */
 function setMobileViewport(matches: boolean) {
-  vi.mocked(window.matchMedia).mockImplementation((query: string) => ({
-    addEventListener: vi.fn(),
-    addListener: vi.fn(),
-    dispatchEvent: vi.fn(),
-    matches,
-    media: query,
-    onchange: null,
-    removeEventListener: vi.fn(),
-    removeListener: vi.fn(),
-  }));
+  (window.matchMedia as Mock<typeof window.matchMedia>).mockImplementation(
+    (query: string) => ({
+      addEventListener: vi.fn(),
+      addListener: vi.fn(),
+      dispatchEvent: vi.fn(),
+      matches,
+      media: query,
+      onchange: null,
+      removeEventListener: vi.fn(),
+      removeListener: vi.fn(),
+    }),
+  );
 }
 
 describe("small app surfaces", () => {
@@ -396,9 +407,9 @@ describe("AppWindow and status bar", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("opens and closes status bar calendar and clock popovers", async () => {
+  it("opens and closes status bar calendar and clock popovers", () => {
     vi.useFakeTimers();
-    vi.setSystemTime(new Date("2026-06-22T13:14:15"));
+    setSystemTime(new Date("2026-06-22T13:14:15"));
     render(<StatusBar />);
 
     fireEvent.click(screen.getByRole("button", { name: "Open calendar" }));
@@ -589,7 +600,7 @@ describe("Desktop and Snake app", () => {
     expect(localStorage.getItem("theme")).toBe("dark");
   });
 
-  it("runs snake movement, scoring, pause, and restart controls", async () => {
+  it("runs snake movement, scoring, pause, and restart controls", () => {
     vi.useFakeTimers();
     vi.spyOn(Math, "random")
       .mockReturnValueOnce(0.5)

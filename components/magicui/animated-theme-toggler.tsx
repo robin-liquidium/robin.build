@@ -15,10 +15,7 @@ export const AnimatedThemeToggler = ({ className }: props) => {
 
   // Initialize from current document class (set by layout script)
   useEffect(() => {
-    try {
-      const initial = document.documentElement.classList.contains("dark");
-      setIsDarkMode(initial);
-    } catch {}
+    setIsDarkMode(document.documentElement.classList.contains("dark"));
   }, []);
   const changeTheme = async () => {
     if (!buttonRef.current) return;
@@ -29,7 +26,9 @@ export const AnimatedThemeToggler = ({ className }: props) => {
         setIsDarkMode(dark);
         try {
           localStorage.setItem("theme", dark ? "dark" : "light");
-        } catch {}
+        } catch {
+          // Storage can be blocked; the choice still applies for this session.
+        }
       });
     }).ready;
 

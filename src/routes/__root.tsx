@@ -64,7 +64,7 @@ function RootDocument({ children }: Readonly<{ children: ReactNode }>) {
         <HeadContent />
         <script
           id="theme-init"
-          // biome-ignore lint/security/noDangerouslySetInnerHtml: This tiny inline script prevents a theme flash before React hydrates.
+          // This tiny inline script prevents a theme flash before React hydrates.
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
         />
       </head>
