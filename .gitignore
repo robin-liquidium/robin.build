@@ -41,6 +41,7 @@ yarn-error.log*
 
 # local tool/runtime state
 .wrangler/
+.cloudflare/
 .codex/
 .open-next/
 

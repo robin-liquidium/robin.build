@@ -11,7 +11,7 @@ A web desktop built with TanStack Start, React, TypeScript, and Tailwind CSS, de
 - `bun run check` — type check with `bun check`.
 - `bun run build` — production build and type check.
 - `bun run preview` — build and preview locally.
-- `bun run deploy` — build and deploy using the generated `dist/server/wrangler.json`; retain this config path when invoking Wrangler directly.
+- `bun run deploy` — build and deploy with the `cf` CLI (beta), configured in `cloudflare.config.ts`.
 
 The complete CI checks are defined in [.github/workflows/ci.yml](.github/workflows/ci.yml).
 
