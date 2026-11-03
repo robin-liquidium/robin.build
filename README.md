@@ -34,4 +34,4 @@ bun run deploy
 
 ## Deploy
 
-Cloudflare Workers deployment is handled by `@cloudflare/vite-plugin` and `wrangler.jsonc`.
+Cloudflare Workers deployment is handled by `@cloudflare/vite-plugin` and the `cf` CLI, configured in `cloudflare.config.ts`.

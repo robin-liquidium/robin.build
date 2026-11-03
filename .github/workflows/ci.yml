@@ -51,4 +51,4 @@ jobs:
         run: bun audit
 
       - name: Validate Cloudflare deployment
-        run: bunx wrangler deploy --dry-run --config dist/server/wrangler.json
+        run: bunx cf deploy --prebuilt --mode production --dry-run
