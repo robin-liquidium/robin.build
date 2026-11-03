@@ -17,6 +17,9 @@ The home route lives in `src/routes/index.tsx`; the bootable desktop screen live
 ```bash
 bun run build
 bun run lint
+bun run fmt
+bun run check
+bun run test
 bun run preview
 bun run deploy
 ```

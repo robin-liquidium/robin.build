@@ -53,7 +53,7 @@ export const AnimatedSpan = ({
   ...props
 }: AnimatedSpanProps) => {
   const elementRef = useRef<HTMLDivElement | null>(null);
-  const isInView = useInView(elementRef as React.RefObject<Element>, {
+  const isInView = useInView(elementRef, {
     amount: 0.3,
     once: true,
   });
@@ -152,7 +152,7 @@ export const TypingAnimation = ({
   const [displayedText, setDisplayedText] = useState<string>("");
   const [started, setStarted] = useState(false);
   const elementRef = useRef<HTMLElement | null>(null);
-  const isInView = useInView(elementRef as React.RefObject<Element>, {
+  const isInView = useInView(elementRef, {
     amount: 0.3,
     once: true,
   });
@@ -273,7 +273,7 @@ export const Terminal = ({
   startOnView = true,
 }: TerminalProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
-  const isInView = useInView(containerRef as React.RefObject<Element>, {
+  const isInView = useInView(containerRef, {
     amount: 0.3,
     once: true,
   });

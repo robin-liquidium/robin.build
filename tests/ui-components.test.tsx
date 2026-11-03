@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { CalendarDays, Circle } from "lucide-react";
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "bun:test";
 import { AnimatedThemeToggler } from "@/components/magicui/animated-theme-toggler";
 import { InteractiveHoverButton } from "@/components/magicui/interactive-hover-button";
 import { MorphingText } from "@/components/magicui/morphing-text";
@@ -234,9 +234,8 @@ describe("Magic UI animation components", () => {
     });
     expect(screen.getByText("boot")).toBeVisible();
 
-    const { TypingHyperText } = await import(
-      "@/components/custom/typing-hyper-text"
-    );
+    const { TypingHyperText } =
+      await import("@/components/custom/typing-hyper-text");
     render(
       <TypingHyperText
         typeInterval={10}

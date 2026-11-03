@@ -1,16 +1,16 @@
-import "@testing-library/jest-dom/vitest";
+import "@testing-library/jest-dom";
 import { cleanup } from "@testing-library/react";
 import React, { useEffect } from "react";
-import { afterEach, vi } from "vitest";
+import { afterEach, vi } from "bun:test";
 
 type RouteParams = Record<string, string>;
 type RouterLinkProps = React.AnchorHTMLAttributes<HTMLAnchorElement> & {
   to?: string;
 };
 
-const routeState = vi.hoisted(() => ({
+const routeState = {
   params: {} as RouteParams,
-}));
+};
 
 const motionPropsToDrop = new Set([
   "animate",
@@ -67,7 +67,7 @@ function stripMotionProps(
     if (motionPropsToDrop.has(key)) continue;
     cleanProps[key] = value;
   }
-  return cleanProps as React.HTMLAttributes<HTMLElement>;
+  return cleanProps;
 }
 
 /** Builds a plain React replacement for a motion intrinsic element. */

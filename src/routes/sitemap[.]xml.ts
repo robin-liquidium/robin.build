@@ -71,8 +71,7 @@ ${urls}
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
     handlers: {
-      GET: async () =>
-        new Response(buildSitemapXml(), { headers: XML_HEADERS }),
+      GET: () => new Response(buildSitemapXml(), { headers: XML_HEADERS }),
     },
   },
 });

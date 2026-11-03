@@ -17,8 +17,7 @@ Host: ${SITE_URL}
 export const Route = createFileRoute("/robots.txt")({
   server: {
     handlers: {
-      GET: async () =>
-        new Response(buildRobotsTxt(), { headers: TEXT_HEADERS }),
+      GET: () => new Response(buildRobotsTxt(), { headers: TEXT_HEADERS }),
     },
   },
 });

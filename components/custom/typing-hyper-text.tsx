@@ -30,7 +30,7 @@ interface TypingHyperTextProps {
 
 const DEFAULT_CHARACTER_SET = Object.freeze(
   "abcdefghijklmnopqrstuvwxyz<>|[]{}.,?/+-=_!@#$%^&*()".split(""),
-) as readonly string[];
+);
 
 export function TypingHyperText({
   children,
