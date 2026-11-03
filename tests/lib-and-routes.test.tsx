@@ -282,9 +282,14 @@ describe("routes", () => {
     const route = asTestRoute(Route);
     testRouterState.params = { slug: FIRST_BLOG_POST.slug };
 
-    render(React.createElement(route.component));
+    const { container } = render(React.createElement(route.component));
 
-    const hiddenArticle = screen.getByRole("article", { hidden: true });
+    // The blog window can render a second article once it has lazy-loaded.
+    const hiddenArticle =
+      container.querySelector<HTMLElement>("article.sr-only");
+    if (!hiddenArticle) {
+      throw new Error("Expected the server-rendered article.");
+    }
     expect(
       within(hiddenArticle).getByRole("heading", { level: 1 }),
     ).toHaveTextContent(FIRST_BLOG_POST.title);
