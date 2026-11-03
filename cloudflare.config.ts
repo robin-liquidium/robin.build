@@ -11,5 +11,8 @@ export default defineConfig({
       enabled: true,
     },
     domains: ["robin.build"],
+    // Matches the live Worker, where both are off.
+    workersDev: false,
+    previewUrls: false,
   },
 });
